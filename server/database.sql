@@ -623,4 +623,67 @@ JOIN
     Hotel h ON r.hotel_address = h.hotel_address;
 
 
--- We need to add 4 other queries here:
+-- 4 random queries this can be changed though depending on frontend:
+
+-- Query to find the hotel with the most rooms:
+SELECT 
+    hotel_address,
+    COUNT(*) AS num_rooms
+FROM 
+    Room
+GROUP BY 
+    hotel_address
+ORDER BY 
+    num_rooms DESC
+LIMIT 
+    1;
+
+-- Query to find the hotel with the highest number of amenities:
+SELECT 
+    hotel_address,
+    COUNT(*) AS num_amenities
+FROM
+    RoomAmenity  
+JOIN
+    Room ON RoomAmenity.room_number = Room.room_number
+GROUP BY
+    hotel_address
+ORDER BY
+    num_amenities DESC
+LIMIT
+    1;
+
+-- Query to find the hotel with the lowest number of occupied rooms:
+SELECT 
+    hotel_address,
+    COUNT(*) AS num_occupied_rooms
+FROM
+    Room
+WHERE
+    room_status = 'Occupied'
+GROUP BY
+    hotel_address
+ORDER BY
+    num_occupied_rooms ASC
+LIMIT
+    1;
+
+--Query to find rooms with a price lower than the average price of rooms in their respective hotels:
+
+SELECT 
+    r.room_number,
+    r.price,
+    r.hotel_address
+FROM 
+    Room r
+INNER JOIN (
+    SELECT 
+        hotel_address,
+        AVG(price) AS avg_price
+    FROM 
+        Room
+    GROUP BY 
+        hotel_address
+) AS avg_prices ON r.hotel_address = avg_prices.hotel_address
+WHERE 
+    r.price < avg_prices.avg_price;
