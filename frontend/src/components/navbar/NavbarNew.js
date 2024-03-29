@@ -1,5 +1,7 @@
 import React from 'react';
 import './navbarStyles.css';
+import { Link } from 'react-router-dom';
+
 
 function NavbarNew() {
   return (
@@ -8,10 +10,10 @@ function NavbarNew() {
         <h2>Book Now!</h2>
       </div>
       <ul className="nav-menu">
-        <button className="nav-button">Hotels</button>
-        <button className="nav-button">Chains</button>
-        <li><button className="login-button">Login</button></li>
-      </ul>
+      <li><Link to="/"><button className="nav-button">Home</button></Link></li>
+      <li><Link to="/hotel-chains"><button className="nav-button">Chains</button></Link></li>
+      <li><Link to="/login"><button className="login-button">Sign Up</button></Link></li>
+    </ul>
     
     </div>
   );

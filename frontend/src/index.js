@@ -2,11 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-
-
-const express = require('express')
-const app = express()
-const port = 3000
+import LogIn from './pages/login/LogIn';
+import HotelChains from './pages/HotelChains';
 
 
 
@@ -22,6 +19,14 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App/>,
+  },
+  {
+    path: "login",
+    element: <LogIn/>,
+  },
+  {
+    path: "hotel-chains",
+    element: <HotelChains/>,
   },
 ]);
 
