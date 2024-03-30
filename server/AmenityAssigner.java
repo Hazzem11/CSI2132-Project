@@ -5,9 +5,9 @@ import java.util.List;
 public class AmenityAssigner {
 
     // JDBC connection parameters
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/your_database_name";
-    private static final String JDBC_USERNAME = "your_username";
-    private static final String JDBC_PASSWORD = "your_password";
+    private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/eHotel";
+    private static final String JDBC_USERNAME = "Mounir";
+    private static final String JDBC_PASSWORD = "Mounir";
 
     // SQL queries
     private static final String SELECT_ALL_ROOMS_QUERY = "SELECT * FROM Room";
@@ -17,8 +17,8 @@ public class AmenityAssigner {
         List<Room> rooms = new ArrayList<>();
 
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD);
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SELECT_ALL_ROOMS_QUERY)) {
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(SELECT_ALL_ROOMS_QUERY)) {
 
             while (resultSet.next()) {
                 // Retrieve room attributes from the ResultSet
@@ -58,7 +58,7 @@ public class AmenityAssigner {
         String roomStatus;
 
         public Room(int roomNumber, String hotelAddress, int capacity, String view, double price, boolean extendability,
-                    Date bookingStartDate, Date bookingEndDate, String roomStatus) {
+                Date bookingStartDate, Date bookingEndDate, String roomStatus) {
             this.roomNumber = roomNumber;
             this.hotelAddress = hotelAddress;
             this.capacity = capacity;
