@@ -44,6 +44,7 @@
     flex-direction: column;
     align-items: flex-start; /* Align items to the left side */
     width: 100%;
+    margin-left: 100px;
 }
 
 .form > div {
@@ -76,8 +77,8 @@
 .hero .hotel-view {
     position: absolute;
     display: flex;
-    right: 100; /* Align the component to the right */
-    width: 100%; /* Set the width to 50% to fit beside the search column */
+    right: 0; /* Align the component to the right */
+    width: 80%; /* Set the width to 50% to fit beside the search column */
     padding: 1rem; /* Add padding for spacing */
     box-sizing: border-box; /* Include padding in the width calculation */
     z-index: 1;

@@ -7,22 +7,38 @@ import Video from '../../assets/cool-hotel.mp4';
 
 function Book() {
   // State variables to store form input values
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [roomCapacity, setRoomCapacity] = useState('');
-  const [roomPrice, setRoomPrice] = useState('');
-  const [amenities, setAmenities] = useState('');
-  const [area, setArea] = useState('');
-  const [hotelStars, setHotelStars] = useState('');
+  const [rooms, setrooms] = useState([])
+  const [formData, setFormData] = useState({
+    startDate: '',
+    endDate: '',
+    roomCapacity: '',
+    roomPrice: '',
+    amenities: '',
+    area: '',
+    hotelCategory: ''
+  });
 
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       // Make GET request to backend API with form data
-      const response = await fetch(`/rooms?startDate=${startDate}&endDate=${endDate}&roomCapacity=${roomCapacity}&roomPrice=${roomPrice}&amenities=${amenities}&area=${area}&hotelStars=${hotelStars}`);
+      const response = await fetch(
+        `/rooms?startDate=${formData.startDate}
+        &endDate=${formData.endDate}
+        &roomCapacity=${formData.roomCapacity}
+        &roomPrice=${formData.roomPrice}
+        &amenities=${formData.amenities}
+        &area=${formData.area}
+        &hotelStars=${formData.hotelStars}`);
       const data = await response.json();
-      // Handle response data and update the UI as needed
+      // Clear the form data after successful submission
+    setFormData({
+      area: '',
+      hotelChain: '',
+      hotelCategory: '',
+      totalRooms: '',
+    });
     } catch (error) {
       console.error('Error fetching rooms:', error);
       // Handle errors
@@ -32,32 +48,7 @@ function Book() {
   // Function to handle input changes
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    // Update the corresponding state based on the input field name
-    switch (name) {
-      case 'startDate':
-        setStartDate(value);
-        break;
-      case 'endDate':
-        setEndDate(value);
-        break;
-      case 'roomCapacity':
-        setRoomCapacity(value);
-        break;
-      case 'roomPrice':
-        setRoomPrice(value);
-        break;
-      case 'amenities':
-        setAmenities(value);
-        break;
-      case 'area':
-        setArea(value);
-        break;
-      case 'hotelStars':
-        setHotelStars(value);
-        break;
-      default:
-        break;
-    }
+    setFormData({ ...formData, [name]: value });
   };
 
   return (
@@ -69,34 +60,34 @@ function Book() {
     <div className='overlay'></div>
       <div className="search">
         <form className="form" onSubmit={handleSubmit}>
-          {/* Input fields for search criteria */}
+          
           <div>
             <label htmlFor="startDate">Start Date:</label>
-            <input type="date" id="startDate" name="startDate" value={startDate} onChange={handleInputChange} />
+            <input type="date" id="startDate" name="startDate" value={formData.startDate} onChange={handleInputChange} />
           </div>
           <div>
             <label htmlFor="endDate">End Date:</label>
-            <input type="date" id="endDate" name="endDate" value={endDate} onChange={handleInputChange} />
+            <input type="date" id="endDate" name="endDate" value={formData.endDate} onChange={handleInputChange} />
+          </div>
+          <div>
+            <label htmlFor="area">Location:</label>
+            <input type="text" id="area" name="area" value={formData.area} onChange={handleInputChange} />
           </div>
           <div>
             <label htmlFor="roomCapacity">Room Capacity:</label>
-            <input type="number" id="roomCapacity" name="roomCapacity" value={roomCapacity} onChange={handleInputChange} />
+            <input type="number" id="roomCapacity" name="roomCapacity" value={formData.roomCapacity} onChange={handleInputChange} />
           </div>
           <div>
             <label htmlFor="roomPrice">Room Price:</label>
-            <input type="number" id="roomPrice" name="roomPrice" value={roomPrice} onChange={handleInputChange} />
+            <input type="number" id="roomPrice" name="roomPrice" value={formData.roomPrice} onChange={handleInputChange} />
           </div>
           <div>
             <label htmlFor="amenities">Amenities:</label>
-            <input type="text" id="amenities" name="amenities" value={amenities} onChange={handleInputChange} />
-          </div>
-          <div>
-            <label htmlFor="area">Area:</label>
-            <input type="text" id="area" name="area" value={area} onChange={handleInputChange} />
+            <input type="text" id="amenities" name="amenities" value={formData.amenities} onChange={handleInputChange} />
           </div>
           <div>
             <label htmlFor="hotelStars">Hotel Stars:</label>
-            <select id="hotelStars" name="hotelStars" value={hotelStars} onChange={handleInputChange}>
+            <select id="hotelStars" name="hotelStars" value={formData.hotelStars} onChange={handleInputChange}>
               <option value="">Select a star rating</option>
               <option value="1">1 star</option>
               <option value="2">2 stars</option>
@@ -110,13 +101,13 @@ function Book() {
         </div>
         <div className='room-view'>
         <h1>Rooms</h1>
-        {/* <ul>
-          {hotels.map((hotel) => (
-            <li key={hotel.id}>
-              <strong>{hotel.name}</strong> - Chain name: {hotel.chainName}, {hotel.starRating} stars
+        <ul>
+          {rooms.map((room) => (
+            <li key={room.id}>
+              <strong>{room.name}</strong> - Chain name: {room.chainName}, {room.starRating} stars
             </li>
           ))}
-        </ul> */}
+        </ul>
       </div>
       </div>
     );

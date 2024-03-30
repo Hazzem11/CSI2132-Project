@@ -6,14 +6,10 @@ function Hero() {
   // State variables to store form input values
   const [hotels, setHotels] = useState([]);
   const [formData, setFormData] = useState({
-    startDate: '',
-    endDate: '',
-    roomCapacity: '',
     area: '',
     hotelChain: '',
     hotelCategory: '',
     totalRooms: '',
-    roomPrice: ''
   });
 
   const handleSubmit = async (event) => {
@@ -22,6 +18,14 @@ function Hero() {
       const response = await fetch(`/hotels?startDate=${formData.startDate}&endDate=${formData.endDate}&roomCapacity=${formData.roomCapacity}&area=${formData.area}&hotelChain=${formData.hotelChain}&hotelCategory=${formData.hotelCategory}&totalRooms=${formData.totalRooms}&roomPrice=${formData.roomPrice}`);
       const data = await response.json();
       setHotels(data.hotels); 
+
+      // Clear the form data after successful submission
+      setFormData({
+        area: '',
+        hotelChain: '',
+        hotelCategory: '',
+        totalRooms: '',
+      });
     } catch (error) {
       console.error('Error fetching hotels:', error);
     }
@@ -41,24 +45,19 @@ function Hero() {
       <div className="search">
         <form className="form" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="startDate">Start Date:</label>
-            <input type="date" id="startDate" name="startDate" value={formData.startDate} onChange={handleInputChange} />
-          </div>
-          <div>
-            <label htmlFor="endDate">End Date:</label>
-            <input type="date" id="endDate" name="endDate" value={formData.endDate} onChange={handleInputChange} />
-          </div>
-          <div>
-            <label htmlFor="roomCapacity">Room Capacity:</label>
-            <input type="number" id="roomCapacity" name="roomCapacity" value={formData.roomCapacity} onChange={handleInputChange} />
-          </div>
-          <div>
-            <label htmlFor="area">Area:</label>
+            <label htmlFor="area">Location:</label>
             <input type="text" id="area" name="area" value={formData.area} onChange={handleInputChange} />
           </div>
           <div>
             <label htmlFor="hotelChain">Hotel Chain:</label>
-            <input type="text" id="hotelChain" name="hotelChain" value={formData.hotelChain} onChange={handleInputChange} />
+            <select id="hotelChain" name="hotelChain" value={formData.hotelChain} onChange={handleInputChange}>
+              <option value="">Select a Chain</option>
+              <option value="1">Hezi Grand Heights</option>
+              <option value="2">Emerald Hills Inc.</option>
+              <option value="3">Mounir Luxury Resorts</option>
+              <option value="4">Sunset Vista Hotels</option>
+              <option value="5">ZouZou International</option>
+            </select>
           </div>
           <div>
             <label htmlFor="hotelCategory">Hotel Category:</label>
@@ -72,12 +71,8 @@ function Hero() {
             </select>
           </div>
           <div>
-            <label htmlFor="totalRooms">Total Number of Rooms:</label>
+            <label htmlFor="totalRooms">Max Number of Rooms:</label>
             <input type="number" id="totalRooms" name="totalRooms" value={formData.totalRooms} onChange={handleInputChange} />
-          </div>
-          <div>
-            <label htmlFor="roomPrice">Price of Rooms:</label>
-            <input type="number" id="roomPrice" name="roomPrice" value={formData.roomPrice} onChange={handleInputChange} />
           </div>
           <button type="submit">Search</button>
         </form>
