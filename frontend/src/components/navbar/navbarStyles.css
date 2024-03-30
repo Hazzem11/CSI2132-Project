@@ -46,3 +46,16 @@ li {
   .login-button:hover {
     background-color: #aaa;
   }
+
+  .profile-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #ccc;
+    color: #333;
+    cursor: pointer;
+    margin-right: 1rem;
+  }
+
+  .profile-button:hover {
+    background-color: #aaa;
+  }

@@ -9,7 +9,7 @@ function LogIn() {
   const [action,setAction] = useState("Sign up")
   return (
     
-    <div>
+    <div className='login-container'>
       <NavbarNew />
       <div className='container'>
         <div className="header">

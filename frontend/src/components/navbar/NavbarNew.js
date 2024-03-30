@@ -13,6 +13,7 @@ function NavbarNew() {
       <li><Link to="/"><button className="nav-button">Home</button></Link></li>
       <li><Link to="/hotel-chains"><button className="nav-button">Chains</button></Link></li>
       <li><Link to="/login"><button className="login-button">Sign Up</button></Link></li>
+      <li><Link to="/profile"><button className="profile-button">Profile</button></Link></li>
     </ul>
     
     </div>
