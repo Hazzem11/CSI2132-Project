@@ -11,6 +11,18 @@
     color: #fff;
 }
 
+.logo h2 {
+  margin-left: 250px;
+  font-size: 40px;
+  /* Adjusted gradient to ensure contrast */
+  color: linear-gradient(45deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+  /* Ensuring fallback color for older browsers */
+  background: -webkit-linear-gradient(45deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
 
 .nav-menu {
     display: flex;

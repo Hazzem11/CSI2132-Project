@@ -1,13 +1,13 @@
 import React from 'react';
-import './navbarStyles.css';
+import '../../components/navbar/navbarStyles.css';
 import { Link } from 'react-router-dom';
 
 
-function NavbarNew() {
+function BookingNavbar() {
   return (
     <div className='navbar'>
       <div className="logo">
-        <h2>Explore our Hotels</h2>
+        <h2>Find your next stay</h2>
       </div>
       <ul className="nav-menu">
       <li><Link to="/"><button className="nav-button">Home</button></Link></li>
@@ -20,4 +20,4 @@ function NavbarNew() {
   );
 }
 
-export default NavbarNew;
+export default BookingNavbar;

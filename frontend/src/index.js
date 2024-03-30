@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import LogIn from './pages/login/LogIn';
-import HotelChains from './pages/hotelChains/HotelChains';
+import Book from './pages/booking/book';
 import Profile from './pages/profile/Profile';
 
 
@@ -26,8 +26,8 @@ const router = createBrowserRouter([
     element: <LogIn/>,
   },
   {
-    path: "hotel-chains",
-    element: <HotelChains/>,
+    path: "booking",
+    element: <Book/>,
   },
   {
     path: "profile",
