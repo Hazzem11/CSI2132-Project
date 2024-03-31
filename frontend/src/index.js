@@ -5,7 +5,8 @@ import App from './App';
 import LogIn from './pages/login/LogIn';
 import Book from './pages/booking/book';
 import Profile from './pages/profile/Profile';
-
+import BookingToRenting from './pages/bookingToRenting/BookingToRenting';
+import CreateRent from './pages/createRent/CreateRent';
 
 
 
@@ -32,6 +33,14 @@ const router = createBrowserRouter([
   {
     path: "profile",
     element: <Profile/>,
+  },
+  {
+    path: "booking-to-renting",
+    element: <BookingToRenting/>,
+  },
+  {
+    path: "walk-in-rent",
+    element: <CreateRent/>,
   },
 ]);
 
