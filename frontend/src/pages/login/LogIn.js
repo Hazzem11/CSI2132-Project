@@ -1,39 +1,66 @@
-import React, { useState } from 'react'
-import NavbarNew from '../../components/navbar/NavbarNew'
-import person from '../../assets/person.png'
-import password from '../../assets/password.png'
-import email from '../../assets/email.png'
+import React, { useState } from 'react';
+import NavbarNew from '../../components/navbar/NavbarNew';
+import person from '../../assets/person.png';
 import './LoginStyles.css';
 
 function LogIn() {
-  const [action,setAction] = useState("Sign up")
+  const[user, setUser] = useState([]);
+  const [formData, setFormData] = useState({
+    fullName: ''
+  });
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:5000/login?fullName=${formData.fullName}`);
+      const data = await response.json();
+      console.log(data)
+      setUser(data.users);
+      
+
+      // Clear the form data after successful submission
+      setFormData({
+        fullName: ''
+      });
+    } catch (error) {
+      console.error('Error fetching hotels:', error);
+    }
+  };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
   return (
-    
     <div className='login-container'>
       <NavbarNew />
       <div className='container'>
         <div className="header">
-          <div className="text">{action}</div>
+          <div className="text">Log in</div>
         </div>
-        <div className="inputs">
-        {action==="Login"?<div></div>:<div className="input"> <img src={person} alt=""/> <input type="text" placeholder='Name'/></div>}
-          
-          <div className="input">
-            <img src={email} alt=""/>
-            <input type="email" placeholder='Email'/>
+        <form onSubmit={handleSubmit}>
+          <div className="inputs">
+            <div className="input">
+              <img src={person} alt="Person icon"/>
+              <label htmlFor="fullName">Full Name</label>
+              <input
+                type="text"
+                id="fullName"
+                name="fullName"
+                value={formData.fullName}
+                placeholder='Enter your full name'
+                onChange={handleInputChange}
+              />
+            </div>
           </div>
-          <div className="input">
-            <img src={password} alt=""/>
-            <input type="password" placeholder='Password'/>
+          <div className="submit-container">
+            <button type="submit" className="submit">Log In</button>
           </div>
-        </div>
-        <div className="submit-container">
-          <div className={action==="Login"?"submit gray":"submit"} onClick={()=>{setAction("Sign up")}}>Sign Up</div>
-          <div className={action==="Sign up"?"submit gray":"submit"} onClick={()=>{setAction("Login")}}>Log In</div>
-        </div>
+        </form>
       </div>
     </div>
   );
 }
 
-export default LogIn
+export default LogIn;

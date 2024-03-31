@@ -75,10 +75,10 @@ app.get("/rooms", async (req, res) => {
 `;
 
 const queryParams = [
-  `'${startDate}'`,
-  `'${endDate}'`,
+  `${startDate}`,
+  `${endDate}`,
   roomCapacity,
-  `'%${location}%'`,
+  `%${location}%`,
   starRating,
   roomPrice,
 ];
@@ -114,15 +114,15 @@ app.get("/login", async (req, res) => {
     const query = `
       SELECT customer_ssn AS user_ssn, customer_full_name AS user_full_name, customer_address AS user_address, 'Customer' AS user_type
       FROM Customer
-      WHERE customer_full_name = '$1'
+      WHERE customer_full_name ILIKE $1
       UNION
       SELECT employee_ssn AS user_ssn, employee_full_name AS user_full_name, employee_address AS user_address, 'Employee' AS user_type
       FROM Employee
-      WHERE employee_full_name = '$1';
+      WHERE employee_full_name ILIKE $1;
     `;
 
 const queryParams = [
-  fullName,
+  `%${fullName}%`
 ];
 
     // Execute the SQL query
