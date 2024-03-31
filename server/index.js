@@ -19,16 +19,15 @@ app.get("/hotels", async (req, res) => {
     // Construct the SQL query
     const query = `
        SELECT *
-       FROM hotel
-       WHERE hotel_address ILIKE $1
-         AND central_office_address ILIKE $2
-         AND star_rating = $3
-         AND EXISTS (
-           SELECT 1
-           FROM room
-           WHERE room.hotel_address = hotel.hotel_address
-             AND room.capacity >= $4
-         )
+       FROM hotel h
+       WHERE h.hotel_address ILIKE $1
+         AND h.central_office_address ILIKE $2
+         AND h.star_rating = $3
+         AND (
+           SELECT COUNT(*)
+           FROM Room r
+           WHERE r.hotel_address = h.hotel_address
+         ) = $4
      `;
 
     // Execute the SQL query
