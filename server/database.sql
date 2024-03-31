@@ -1,4 +1,3 @@
-CREATE DATABASE ehotels,
 
 -- HotelChain table
 CREATE TABLE HotelChain (
@@ -6,7 +5,7 @@ CREATE TABLE HotelChain (
     email_address VARCHAR(255),
     number_of_hotels INT CHECK (number_of_hotels >= 0),
     PRIMARY KEY (central_office_address)
-),
+);
 
 -- Hotel table
 CREATE TABLE Hotel (
@@ -16,7 +15,7 @@ CREATE TABLE Hotel (
     hotel_email VARCHAR(255),
     PRIMARY KEY (hotel_address),
     FOREIGN KEY (central_office_address) REFERENCES HotelChain(central_office_address) ON DELETE CASCADE
-),
+);
 
 -- Customer table
 CREATE TABLE Customer (
@@ -24,9 +23,9 @@ CREATE TABLE Customer (
     register_date DATE,
     customer_full_name VARCHAR(255),
     customer_address VARCHAR(255),
-    payed_in_advance BOOLEAN
+    payed_in_advance BOOLEAN,
     PRIMARY KEY (customer_ssn)
-),
+);
 
 -- Room table
 CREATE TABLE Room (
@@ -41,7 +40,7 @@ CREATE TABLE Room (
     room_status VARCHAR(50),
     PRIMARY KEY (room_number, hotel_address),
     FOREIGN KEY (hotel_address) REFERENCES Hotel(hotel_address) ON DELETE CASCADE
-),
+);
 
 -- Employee table
 CREATE TABLE Employee (
@@ -51,13 +50,13 @@ CREATE TABLE Employee (
     employee_address VARCHAR(255),
     PRIMARY KEY (employee_ssn),
     FOREIGN KEY (hotel_address) REFERENCES Hotel(hotel_address) ON DELETE CASCADE
-),
+);
 
 -- Archive table
 CREATE TABLE Archive (
     id SERIAL PRIMARY KEY,
     information TEXT
-),
+);
 
 -- HotelPhoneNumber table (Multi-valued attribute)
 CREATE TABLE HotelPhoneNumber (
@@ -65,7 +64,7 @@ CREATE TABLE HotelPhoneNumber (
     phone_number VARCHAR(20) NOT NULL,
     PRIMARY KEY (hotel_address, phone_number),
     FOREIGN KEY (hotel_address) REFERENCES Hotel(hotel_address) ON DELETE CASCADE
-),
+);
 
 -- ChainPhoneNumber table (Multi-valued attribute)
 CREATE TABLE ChainPhoneNumber (
@@ -73,7 +72,7 @@ CREATE TABLE ChainPhoneNumber (
     phone_number VARCHAR(20) NOT NULL,
     PRIMARY KEY (central_office_address, phone_number),
     FOREIGN KEY (central_office_address) REFERENCES HotelChain(central_office_address) ON DELETE CASCADE
-),
+);
 
 -- Defect table (Multi-valued attribute)
 CREATE TABLE Defect (
@@ -82,13 +81,13 @@ CREATE TABLE Defect (
     defect_description TEXT,
     PRIMARY KEY (room_number, hotel_address),
     FOREIGN KEY (room_number, hotel_address) REFERENCES Room(room_number, hotel_address) ON DELETE CASCADE
-),
+);
 
 -- Amenity table (Multi-valued attribute)
 CREATE TABLE Amenity (
     amenity_id SERIAL PRIMARY KEY,
     amenity_name VARCHAR(255) NOT NULL
-),
+);
 
 -- RoomAmenity junction table to manage the many-to-many relationship between Room and Amenity
 CREATE TABLE RoomAmenity (
@@ -98,7 +97,7 @@ CREATE TABLE RoomAmenity (
     PRIMARY KEY (room_number, hotel_address, amenity_id),
     FOREIGN KEY (room_number, hotel_address) REFERENCES Room(room_number, hotel_address) ON DELETE CASCADE,
     FOREIGN KEY (amenity_id) REFERENCES Amenity(amenity_id) ON DELETE CASCADE
-),
+);
 
 -- Booking table (relationship)
 CREATE TABLE Booking (
@@ -108,7 +107,7 @@ CREATE TABLE Booking (
     PRIMARY KEY (customer_ssn, room_number, hotel_address),
     FOREIGN KEY (customer_ssn) REFERENCES Customer(customer_ssn) ON DELETE CASCADE,
     FOREIGN KEY (room_number, hotel_address) REFERENCES Room(room_number, hotel_address) ON DELETE CASCADE
-),
+);
 
 --Renting table (relationship)
 CREATE TABLE Renting (
@@ -120,7 +119,7 @@ CREATE TABLE Renting (
     FOREIGN KEY (room_number, hotel_address) REFERENCES Room(room_number, hotel_address) ON DELETE CASCADE,
     FOREIGN KEY (customer_ssn) REFERENCES Customer(customer_ssn) ON DELETE CASCADE,
     FOREIGN KEY (employee_ssn) REFERENCES Employee(employee_ssn) ON DELETE CASCADE
-),
+);
 
 -- Manages table (relationship)
 CREATE TABLE Manages (
@@ -129,7 +128,7 @@ CREATE TABLE Manages (
     PRIMARY KEY (employee_ssn, hotel_address),
     FOREIGN KEY (employee_ssn) REFERENCES Employee(employee_ssn) ON DELETE CASCADE,
     FOREIGN KEY (hotel_address) REFERENCES Hotel(hotel_address) ON DELETE CASCADE
-),
+);
 
 
 -- Data for the 5 Hotel Chains
@@ -139,7 +138,7 @@ VALUES
     ('Emerald Hills Inc. HQ, Los Angeles, California, United States', 'info@emeraldhills.com', 8),
     ('Mounir Luxury Resorts HQ, Miami, Florida, United States', 'info@mounirluxuryresorts.com', 15),
     ('Sunset Vista Hotels HQ, Ottawa, Ontario, Canada', 'info@sunsetvistahotels.com', 8),
-    ('ZouZou International HQ, Beirut, Lebanon', 'info@zouzouinternational.com', 19),
+    ('ZouZou International HQ, Beirut, Lebanon', 'info@zouzouinternational.com', 19);
 
 -- Data for all Hotels
 INSERT INTO Hotel (hotel_address, central_office_address, star_rating, hotel_email)
@@ -155,7 +154,7 @@ VALUES
     ('009 Hezi St, Ottawa, Ontario, Canada', 'Hezi Grand Heights HQ, New York, New York, United States', 3, 'info9@hezigrandhotels.com'),
     ('010 Hezi Ave, Toronto, Ontario, Canada', 'Hezi Grand Heights HQ, New York, New York, United States', 3, 'info10@hezigrandhotels.com'),
     ('011 Hezi St, Los Angeles, California, United States', 'Hezi Grand Heights HQ, New York, New York, United States', 4, 'info11@hezigrandhotels.com'),
-    ('012 Hezi St, Las Vegas, Nevada, United States', 'Hezi Grand Heights HQ, New York, New York, United States', 4, 'info12@hezigrandhotels.com'),
+    ('012 Hezi St, Las Vegas, Nevada, United States', 'Hezi Grand Heights HQ, New York, New York, United States', 4, 'info12@hezigrandhotels.com');
 
 INSERT INTO Hotel (hotel_address, central_office_address, star_rating, hotel_email)
 VALUES
@@ -166,7 +165,7 @@ VALUES
     ('105 Emerald Blvd, Los Angeles, California, United States', 'Emerald Hills Inc. HQ, Los Angeles, California, United States', 5, 'info5@emeraldhills.com'),
     ('106 Emerald Rd, New York, New York, United States', 'Emerald Hills Inc. HQ, Los Angeles, California, United States', 5, 'info6@emeraldhills.com'),
     ('107 Emerald Ave, Las Vegas, Nevada, United States', 'Emerald Hills Inc. HQ, Los Angeles, California, United States', 5, 'info7@emeraldhills.com'),
-    ('108 Emerald St, Montreal, Quebec, Canada', 'Emerald Hills Inc. HQ, Los Angeles, California, United States', 3, 'info8@emeraldhills.com'),
+    ('108 Emerald St, Montreal, Quebec, Canada', 'Emerald Hills Inc. HQ, Los Angeles, California, United States', 3, 'info8@emeraldhills.com');
 
 INSERT INTO Hotel (hotel_address, central_office_address, star_rating, hotel_email)
 VALUES
@@ -184,7 +183,7 @@ VALUES
     ('212 Riverwalk St, Amsterdam, Netherlands', 'Mounir Luxury Resorts HQ, Miami, Florida, United States', 4, 'info12@mounirluxuryresorts.com'),
     ('213 Island Blvd, Dubai, United Arab Emirates', 'Mounir Luxury Resorts HQ, Miami, Florida, United States', 4, 'info13@mounirluxuryresorts.com'),
     ('214 Gulf Rd, Cape Town, South Africa', 'Mounir Luxury Resorts HQ, Miami, Florida, United States', 5, 'info14@mounirluxuryresorts.com'),
-    ('215 Mountain Ave, Queenstown, New Zealand', 'Mounir Luxury Resorts HQ, Miami, Florida, United States', 5, 'info15@mounirluxuryresorts.com'),
+    ('215 Mountain Ave, Queenstown, New Zealand', 'Mounir Luxury Resorts HQ, Miami, Florida, United States', 5, 'info15@mounirluxuryresorts.com');
 
 INSERT INTO Hotel (hotel_address, central_office_address, star_rating, hotel_email)
 VALUES
@@ -195,7 +194,7 @@ VALUES
     ('305 Ocean View Dr, Sydney, Australia', 'Sunset Vista Hotels HQ, Ottawa, Ontario, Canada', 5, 'info5@sunsetvistahotels.com'),
     ('306 Mountain Rd, Queenstown, New Zealand', 'Sunset Vista Hotels HQ, Ottawa, Ontario, Canada', 5, 'info6@sunsetvistahotels.com'),
     ('307 Island Ave, Bali, Indonesia', 'Sunset Vista Hotels HQ, Ottawa, Ontario, Canada', 5, 'info7@sunsetvistahotels.com'),
-    ('308 Hilltop Blvd, Cape Town, South Africa', 'Sunset Vista Hotels HQ, Ottawa, Ontario, Canada', 3, 'info8@sunsetvistahotels.com'),
+    ('308 Hilltop Blvd, Cape Town, South Africa', 'Sunset Vista Hotels HQ, Ottawa, Ontario, Canada', 3, 'info8@sunsetvistahotels.com');
 
 INSERT INTO Hotel (hotel_address, central_office_address, star_rating, hotel_email)
 VALUES
@@ -217,7 +216,7 @@ VALUES
     ('416 ZouZou St, Istanbul, Turkey', 'ZouZou International HQ, Beirut, Lebanon', 5, 'info16@zouzouinternational.com'),
     ('417 ZouZou Blvd, Athens, Greece', 'ZouZou International HQ, Beirut, Lebanon', 3, 'info17@zouzouinternational.com'),
     ('418 ZouZou Rd, Vancouver, Canada', 'ZouZou International HQ, Beirut, Lebanon', 3, 'info18@zouzouinternational.com'),
-    ('419 ZouZou Ave, Madrid, Spain', 'ZouZou International HQ, Beirut, Lebanon', 3, 'info19@zouzouinternational.com'),
+    ('419 ZouZou Ave, Madrid, Spain', 'ZouZou International HQ, Beirut, Lebanon', 3, 'info19@zouzouinternational.com');
 
 -- Rooms for each Hotel
 INSERT INTO Room (room_number, hotel_address, capacity, view, price, extendability, booking_start_date, booking_end_date, room_status)
@@ -601,9 +600,9 @@ VALUES
 (2, '419 ZouZou Ave, Madrid, Spain', 4, 'Mountain View', 300.00, FALSE, '2024-03-15', '2024-03-28', 'Occupied'),
 (3, '419 ZouZou Ave, Madrid, Spain', 3, 'Lake View', 250.00, TRUE, NULL, NULL, 'Available'),
 (4, '419 ZouZou Ave, Madrid, Spain', 2, 'Ocean View', 400.00, FALSE, NULL, NULL, 'Available'),
-(5, '419 ZouZou Ave, Madrid, Spain', 5, 'Garden View', 450.00, TRUE, NULL, NULL, 'Available'),
+(5, '419 ZouZou Ave, Madrid, Spain', 5, 'Garden View', 450.00, TRUE, NULL, NULL, 'Available');
 
-INSERT INTO Amenity (amenity_id, amenity_name, ) VALUES 
+INSERT INTO Amenity (amenity_id, amenity_name) VALUES 
 (0, 'Comfortable mattress'), 
 (1, 'Pillows (varying firmness)'), 
 (2, 'Clean bed linens (sheets, pillowcases, duvet covers)'), 
@@ -640,7 +639,7 @@ INSERT INTO Amenity (amenity_id, amenity_name, ) VALUES
 (33, 'Room service menu'), 
 (34, 'Wheelchair accessibility'), 
 (35, 'Handrails in the bathroom'), 
-(36, 'Accessible shower or bathtub'),
+(36, 'Accessible shower or bathtub');
 
 INSERT INTO RoomAmenity (room_number, hotel_address, amenity_id) VALUES 
 (1, '001 Hezi St, Montreal, Quebec, Canada', 23),
