@@ -44,10 +44,10 @@ app.get("/hotels", async (req, res) => {
   }
 });
 
-app.get("/rooms/:hotelAddress", async (req, res) => {
+app.get("/rooms", async (req, res) => {
   try {
     // Extract parameters from the request
-    const { startDate, endDate, roomCapacity, hotelAddress, roomPrice } =
+    const { startDate, endDate, roomCapacity, hotel_address, roomPrice } =
       req.query;
 
     // Construct the SQL query
@@ -68,11 +68,12 @@ app.get("/rooms/:hotelAddress", async (req, res) => {
       `${startDate}`,
       `${endDate}`,
       roomCapacity,
-      hotelAddress,
+      hotel_address,
       roomPrice,
     ];
 
     // Execute the SQL query
+    console.log(queryParams)
     const { rows } = await pool.query(query, queryParams);
 
     // Send the response with the fetched rooms

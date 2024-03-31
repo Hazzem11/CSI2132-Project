@@ -14,15 +14,16 @@ function Book() {
     endDate: '',
     roomCapacity: '',
     roomPrice: '',
-    hotel_address: hotel_address,   
   });
+
 
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       // Make GET request to backend API with form data
-      const response = await fetch(`/rooms?
+      console.log(formData)
+      const response = await fetch(`http://localhost:3001/rooms?
        startDate=${formData.startDate}
         &endDate=${formData.endDate}
         &roomCapacity=${formData.roomCapacity}
@@ -30,7 +31,8 @@ function Book() {
         &roomPrice=${formData.roomPrice}
         `); 
 
-      const data = await response.json();
+        const data = await response.json();
+
       setRooms(data.rooms); // Update rooms state with fetched rooms
 
       // Clear the form data after successful submission
@@ -84,11 +86,11 @@ function Book() {
         <div className='room-view'>
         <h1>{hotel_address}</h1>
         <ul>
-          {rooms.map((room) => (
+          {/* {rooms.map((room) => (
             <li key={room.room_number}>
-              Room Number: {room.room_number}, {room.capacity}, {room.price}, {room.view}
+              Room Number: {room.room_number}, {room.capacity}, {room.price}
             </li>
-          ))}
+          ))} */}
         </ul>
       </div>
       </div>
