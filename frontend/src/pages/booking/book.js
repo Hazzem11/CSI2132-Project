@@ -23,8 +23,7 @@ function Book() {
     try {
       // Make GET request to backend API with form data
       console.log(formData)
-      const response = await fetch(`http://localhost:3001/rooms?
-       startDate=${formData.startDate}
+      const response = await fetch(`http://localhost:3001/rooms?startDate=${formData.startDate}
         &endDate=${formData.endDate}
         &roomCapacity=${formData.roomCapacity}
         &hotel_address=${hotel_address}
@@ -32,6 +31,7 @@ function Book() {
         `); 
 
         const data = await response.json();
+        console.log(data);
 
       setRooms(data.rooms); // Update rooms state with fetched rooms
 

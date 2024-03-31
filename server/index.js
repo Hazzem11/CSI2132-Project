@@ -65,11 +65,11 @@ app.get("/rooms", async (req, res) => {
 `;
 
     const queryParams = [
-      `${startDate}`,
-      `${endDate}`,
-      roomCapacity,
-      hotel_address,
-      roomPrice,
+      `${startDate.trim()}`,
+      `${endDate.trim()}`,
+      parseInt(roomCapacity.trim()),
+      `%${hotel_address.trim()}%`,
+      parseInt(roomPrice.trim()),
     ];
 
     // Execute the SQL query
