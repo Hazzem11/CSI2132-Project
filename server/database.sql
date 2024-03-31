@@ -2696,6 +2696,7 @@ INSERT INTO RoomAmenity (room_number, hotel_address, amenity_id) VALUES
  (5, '419 ZouZou Ave, Madrid, Spain', 2),
  (5, '419 ZouZou Ave, Madrid, Spain', 1),
  (5, '419 ZouZou Ave, Madrid, Spain', 10);
+
 INSERT INTO Customer (customer_ssn, register_date, customer_full_name, customer_address, payed_in_advance)
 VALUES ('12345', '3-31-2024', 'Mounir Ait Hamou', '123 Mounir St, Ottawa, Ontario, Canada', FALSE),
        ('67890', '3-31-2024', 'Joseph Sreih', '456 Joseph Ave, Ottawa, Ontario, Canada', TRUE);
@@ -2703,11 +2704,6 @@ VALUES ('12345', '3-31-2024', 'Mounir Ait Hamou', '123 Mounir St, Ottawa, Ontari
 -- Inserting data into the Employee table
 INSERT INTO Employee (employee_ssn, hotel_address, employee_full_name, employee_address)
 VALUES ('45678', '001 Hezi St, Montreal, Quebec, Canada', 'Hazzem Sukar', '532 Hazzem Rd, Ottawa, Ontario, Canada');
-
-
-
-
-
 
 CREATE INDEX idx_room_number_hotel_address ON Room (room_number, hotel_address);
 CREATE INDEX idx_roomamenity_room_hotel_amenity ON RoomAmenity (room_number, hotel_address, amenity_id);
