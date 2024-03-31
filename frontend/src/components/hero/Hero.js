@@ -15,9 +15,10 @@ function Hero() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch(`/hotels?startDate=${formData.startDate}&endDate=${formData.endDate}&roomCapacity=${formData.roomCapacity}&area=${formData.area}&hotelChain=${formData.hotelChain}&hotelCategory=${formData.hotelCategory}&totalRooms=${formData.totalRooms}&roomPrice=${formData.roomPrice}`);
+      const response = await fetch(`/hotels?area=${formData.area}&hotelChain=${formData.hotelChain}&hotelCategory=${formData.hotelCategory}&totalRooms=${formData.totalRooms}`);
       const data = await response.json();
       setHotels(data.hotels); 
+      console.log(data.hotels);
 
       // Clear the form data after successful submission
       setFormData({
@@ -52,11 +53,11 @@ function Hero() {
             <label htmlFor="hotelChain">Hotel Chain:</label>
             <select id="hotelChain" name="hotelChain" value={formData.hotelChain} onChange={handleInputChange}>
               <option value="">Select a Chain</option>
-              <option value="1">Hezi Grand Heights</option>
-              <option value="2">Emerald Hills Inc.</option>
-              <option value="3">Mounir Luxury Resorts</option>
-              <option value="4">Sunset Vista Hotels</option>
-              <option value="5">ZouZou International</option>
+              <option value="1">Hezi Grand Heights HQ, New York, New York, United States</option>
+              <option value="2">Emerald Hills Inc. HQ, Los Angeles, California, United States</option>
+              <option value="3">Mounir Luxury Resorts HQ, Miami, Florida, United States</option>
+              <option value="4">Sunset Vista Hotels HQ, Ottawa, Ontario, Canada</option>
+              <option value="5">ZouZou International HQ, Beirut, Lebanon</option>
             </select>
           </div>
           <div>
