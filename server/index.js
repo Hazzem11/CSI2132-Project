@@ -4,10 +4,6 @@ const cors = require("cors");
 const pool = require("./db");
 const port = 5000;
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
-
 //middleware
 app.use(cors());;
 app.use(express.json());
@@ -18,7 +14,6 @@ app.use(express.json());
 // Route to handle hotel search
 app.get("/hotels", async (req, res) => {
   try {
-    // Extract parameters from the request
     const { area, hotelChain, hotelCategory, totalRooms } = req.query;
     // Construct the SQL query
     const query = `
@@ -31,10 +26,8 @@ app.get("/hotels", async (req, res) => {
         SELECT COUNT(*)
         FROM Room r
         WHERE r.hotel_address = h.hotel_address
-      ) => $4
+      ) >= $4
      `;
-
-    // Execute the SQL query
     
     const { rows } = await pool.query(query, [
       `%${area}%`,
@@ -109,3 +102,6 @@ const queryParams = [
 });
 
 
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});

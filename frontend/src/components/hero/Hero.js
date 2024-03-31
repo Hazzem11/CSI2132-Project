@@ -56,11 +56,11 @@ function Hero() {
             <label htmlFor="hotelChain">Hotel Chain:</label>
             <select id="hotelChain" name="hotelChain" value={formData.hotelChain} onChange={handleInputChange}>
               <option value="">Select a Chain</option>
-              <option value="1">Hezi Grand Heights</option>
-              <option value="2">Emerald Hills Inc.</option>
-              <option value="3">Mounir Luxury Resorts</option>
-              <option value="4">Sunset Vista Hotels</option>
-              <option value="5">ZouZou International</option>
+              <option value="Hezi Grand Heights HQ, New York, New York, United States">Hezi Grand Heights</option>
+              <option value="Emerald Hills Inc. HQ, Los Angeles, California, United States">Emerald Hills Inc.</option>
+              <option value="Mounir Luxury Resorts HQ, Miami, Florida, United States">Mounir Luxury Resorts</option>
+              <option value="Sunset Vista Hotels HQ, Ottawa, Ontario, Canada">Sunset Vista Hotels</option>
+              <option value="ZouZou International HQ, Beirut, Lebanon">ZouZou International</option>
             </select>
           </div>
           <div>
@@ -82,15 +82,16 @@ function Hero() {
         </form>
       </div>
       <div className='hotel-view'>
-        <h1>Hotels</h1>
-        <ul>
-          {hotels.map((hotel) => (
-            <li key={hotel.id}>
-              <strong>{hotel.name}</strong> - Chain name: {hotel.chainName}, {hotel.starRating} stars
-            </li>
-          ))}
-        </ul>
-      </div>
+  <h1>Hotels</h1>
+  <ul>
+    {hotels.map((hotel) => (
+      <li key={hotel.hotel_address}>
+        <strong>{hotel.hotel_name}</strong> - Chain: {hotel.central_office_address} Stars: {hotel.star_rating}
+      </li>
+    ))}
+  </ul>
+</div>
+
     </div> 
   );
 }
