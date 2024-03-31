@@ -1,21 +1,21 @@
-import React, {useState} from 'react'
-import BookingNavbar from './BookingNavbar'
+import React, { useState } from 'react';
+import BookingNavbar from './BookingNavbar';
+import { useParams } from 'react-router-dom';
 import './BookingStyling.css';
 import Video from '../../assets/cool-hotel.mp4';
 
-
-
 function Book() {
-  // State variables to store form input values
-  const [rooms, setrooms] = useState([])
+  // State variables to store form input values and fetched rooms
+  const { hotel_address } = useParams(); // Get hotel_address from URL params
+
+  const [rooms, setRooms] = useState([]);
   const [formData, setFormData] = useState({
     startDate: '',
     endDate: '',
     roomCapacity: '',
     roomPrice: '',
     amenities: '',
-    area: '',
-    hotelCategory: ''
+    hotel_address: hotel_address || '',   
   });
 
   // Function to handle form submission
@@ -23,22 +23,26 @@ function Book() {
     event.preventDefault();
     try {
       // Make GET request to backend API with form data
-      const response = await fetch(
-        `/rooms?startDate=${formData.startDate}
+      const response = await fetch(`/rooms?
+       startDate=${formData.startDate}
         &endDate=${formData.endDate}
         &roomCapacity=${formData.roomCapacity}
+        &hotel_address=${hotel_address}
         &roomPrice=${formData.roomPrice}
-        &amenities=${formData.amenities}
-        &area=${formData.area}
-        &hotelStars=${formData.hotelStars}`);
+        `); 
+
       const data = await response.json();
+      setRooms(data.rooms); // Update rooms state with fetched rooms
+
       // Clear the form data after successful submission
-    setFormData({
-      area: '',
-      hotelChain: '',
-      hotelCategory: '',
-      totalRooms: '',
-    });
+      setFormData({
+        startDate: '',
+        endDate: '',
+        roomCapacity: '',
+        roomPrice: '',
+        amenities: '',
+        area: '',
+      });
     } catch (error) {
       console.error('Error fetching rooms:', error);
       // Handle errors
@@ -70,10 +74,6 @@ function Book() {
             <input type="date" id="endDate" name="endDate" value={formData.endDate} onChange={handleInputChange} />
           </div>
           <div>
-            <label htmlFor="area">Location:</label>
-            <input type="text" id="area" name="area" value={formData.area} onChange={handleInputChange} />
-          </div>
-          <div>
             <label htmlFor="roomCapacity">Room Capacity:</label>
             <input type="number" id="roomCapacity" name="roomCapacity" value={formData.roomCapacity} onChange={handleInputChange} />
           </div>
@@ -85,26 +85,15 @@ function Book() {
             <label htmlFor="amenities">Amenities:</label>
             <input type="text" id="amenities" name="amenities" value={formData.amenities} onChange={handleInputChange} />
           </div>
-          <div>
-            <label htmlFor="hotelStars">Hotel Stars:</label>
-            <select id="hotelStars" name="hotelStars" value={formData.hotelStars} onChange={handleInputChange}>
-              <option value="">Select a star rating</option>
-              <option value="1">1 star</option>
-              <option value="2">2 stars</option>
-              <option value="3">3 stars</option>
-              <option value="4">4 stars</option>
-              <option value="5">5 stars</option>
-            </select>
-          </div>
           <button type="submit">Search</button>
         </form>
         </div>
         <div className='room-view'>
-        <h1>Rooms</h1>
+        <h1>{hotel_address}</h1>
         <ul>
           {rooms.map((room) => (
             <li key={room.id}>
-              <strong>{room.name}</strong> - Chain name: {room.chainName}, {room.starRating} stars
+              Room Number: {room.}, {room.starRating}
             </li>
           ))}
         </ul>

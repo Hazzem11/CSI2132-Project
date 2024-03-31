@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
 import './HeroStyles.css';
 import Video from '../../assets/cool-hotel.mp4';
 
@@ -11,6 +12,9 @@ function Hero() {
     hotelCategory: '',
     totalRooms: '',
   });
+
+  const navigate = useNavigate();
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -38,6 +42,11 @@ function Hero() {
     
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+ 
+  const handleViewRooms = (hotel_address) => {
+    navigate(`/booking/${hotel_address}`); 
   };
 
   return (
@@ -86,11 +95,13 @@ function Hero() {
   <ul>
     {hotels.map((hotel) => (
       <li key={hotel.hotel_address}>
-        <strong>{hotel.hotel_name}</strong> - Chain: {hotel.central_office_address} Stars: {hotel.star_rating}
+        {hotel.hotel_address} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stars: {hotel.star_rating}
+        <button onClick={() => handleViewRooms(hotel.hotel_address)}>View Rooms</button>
       </li>
     ))}
   </ul>
-</div>
+    </div>
+
 
     </div> 
   );

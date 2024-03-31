@@ -104,7 +104,8 @@ CREATE TABLE Booking (
     customer_ssn VARCHAR(20) NOT NULL,
     room_number INT NOT NULL,
     hotel_address VARCHAR(255) NOT NULL,
-    PRIMARY KEY (customer_ssn, room_number, hotel_address),
+    booking_date DATE,
+    PRIMARY KEY (customer_ssn, room_number, hotel_address, booking_date),
     FOREIGN KEY (customer_ssn) REFERENCES Customer(customer_ssn) ON DELETE CASCADE,
     FOREIGN KEY (room_number, hotel_address) REFERENCES Room(room_number, hotel_address) ON DELETE CASCADE
 );
@@ -115,7 +116,8 @@ CREATE TABLE Renting (
     hotel_address VARCHAR(255) NOT NULL,
     customer_ssn VARCHAR(20) NOT NULL,
     employee_ssn VARCHAR(20) NOT NULL,
-    PRIMARY KEY (room_number, hotel_address, customer_ssn, employee_ssn),
+    renting_start_date DATE,
+    PRIMARY KEY (room_number, hotel_address, customer_ssn, employee_ssn, renting_start_date),
     FOREIGN KEY (room_number, hotel_address) REFERENCES Room(room_number, hotel_address) ON DELETE CASCADE,
     FOREIGN KEY (customer_ssn) REFERENCES Customer(customer_ssn) ON DELETE CASCADE,
     FOREIGN KEY (employee_ssn) REFERENCES Employee(employee_ssn) ON DELETE CASCADE
@@ -2694,3 +2696,20 @@ INSERT INTO RoomAmenity (room_number, hotel_address, amenity_id) VALUES
  (5, '419 ZouZou Ave, Madrid, Spain', 2),
  (5, '419 ZouZou Ave, Madrid, Spain', 1),
  (5, '419 ZouZou Ave, Madrid, Spain', 10);
+INSERT INTO Customer (customer_ssn, register_date, customer_full_name, customer_address, payed_in_advance)
+VALUES ('12345', '3-31-2024', 'Mounir Ait Hamou', '123 Mounir St, Ottawa, Ontario, Canada', FALSE),
+       ('67890', '3-31-2024', 'Joseph Sreih', '456 Joseph Ave, Ottawa, Ontario, Canada', TRUE);
+
+-- Inserting data into the Employee table
+INSERT INTO Employee (employee_ssn, hotel_address, employee_full_name, employee_address)
+VALUES ('45678', '001 Hezi St, Montreal, Quebec, Canada', 'Hazzem Sukar', '532 Hazzem Rd, Ottawa, Ontario, Canada');
+
+
+
+
+
+
+CREATE INDEX idx_room_number_hotel_address ON Room (room_number, hotel_address);
+CREATE INDEX idx_roomamenity_room_hotel_amenity ON RoomAmenity (room_number, hotel_address, amenity_id);
+CREATE INDEX idx_renting_room_hotel_customer_employee_startdate 
+    ON Renting (room_number, hotel_address, customer_ssn, employee_ssn, renting_start_date);
