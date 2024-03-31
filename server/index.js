@@ -60,23 +60,25 @@ app.get("/rooms", async (req, res) => {
 
     // Construct the SQL query
     let query = `
-  SELECT *
-  FROM room r
-  JOIN hotel h ON r.hotel_address = h.hotel_address
-  JOIN RoomAmenity ra ON r.room_number = ra.room_number AND r.hotel_address = ra.hotel_address
-  WHERE r.booking_start_date >= '$1'
-  AND r.booking_end_date <= '$2'
-  AND r.capacity >= $3
-  AND h.hotel_address ILIKE $4
-  AND h.star_rating = $5
-  AND r.price <= $6
+    SELECT *
+    FROM room r
+    JOIN hotel h ON r.hotel_address = h.hotel_address
+    JOIN RoomAmenity ra ON r.room_number = ra.room_number AND r.hotel_address = ra.hotel_address
+    WHERE (
+            (r.booking_start_date >= $1 OR r.booking_start_date IS NULL)
+            AND (r.booking_end_date <= $2 OR r.booking_end_date IS NULL)
+          )
+          AND r.capacity >= $3
+          AND h.hotel_address ILIKE $4
+          AND h.star_rating = $5
+          AND r.price <= $6;
 `;
 
 const queryParams = [
   `'${startDate}'`,
   `'${endDate}'`,
   roomCapacity,
-  `%${location}%`,
+  `'%${location}%'`,
   starRating,
   roomPrice,
 ];
@@ -120,25 +122,21 @@ app.get("/login", async (req, res) => {
     `;
 
 const queryParams = [
-  `'${startDate}'`,
-  `'${endDate}'`,
-  roomCapacity,
-  `%${location}%`,
-  starRating,
-  roomPrice,
+  fullName,
 ];
 
     // Execute the SQL query
     const { rows } = await pool.query(query, queryParams);
 
     // Send the response with the fetched rooms
-    res.json({ rooms: rows });
+    res.json({ users: rows });
   } catch (error) {
     // Handle errors
     console.error("Error executing query:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
