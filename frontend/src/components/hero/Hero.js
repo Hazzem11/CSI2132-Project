@@ -18,7 +18,6 @@ function Hero() {
       const response = await fetch(`/hotels?area=${formData.area}&hotelChain=${formData.hotelChain}&hotelCategory=${formData.hotelCategory}&totalRooms=${formData.totalRooms}`);
       const data = await response.json();
       setHotels(data.hotels); 
-      console.log(data.hotels);
 
       // Clear the form data after successful submission
       setFormData({
@@ -33,6 +32,7 @@ function Hero() {
   };
 
   const handleInputChange = (event) => {
+    
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -53,22 +53,22 @@ function Hero() {
             <label htmlFor="hotelChain">Hotel Chain:</label>
             <select id="hotelChain" name="hotelChain" value={formData.hotelChain} onChange={handleInputChange}>
               <option value="">Select a Chain</option>
-              <option value="1">Hezi Grand Heights HQ, New York, New York, United States</option>
-              <option value="2">Emerald Hills Inc. HQ, Los Angeles, California, United States</option>
-              <option value="3">Mounir Luxury Resorts HQ, Miami, Florida, United States</option>
-              <option value="4">Sunset Vista Hotels HQ, Ottawa, Ontario, Canada</option>
-              <option value="5">ZouZou International HQ, Beirut, Lebanon</option>
+              <option value="1">Hezi Grand Heights</option>
+              <option value="2">Emerald Hills Inc.</option>
+              <option value="3">Mounir Luxury Resorts</option>
+              <option value="4">Sunset Vista Hotels</option>
+              <option value="5">ZouZou International</option>
             </select>
           </div>
           <div>
             <label htmlFor="hotelCategory">Hotel Category:</label>
             <select id="hotelCategory" name="hotelCategory" value={formData.hotelCategory} onChange={handleInputChange}>
               <option value="">Select a category</option>
-              <option value="1">1 star</option>
-              <option value="2">2 stars</option>
-              <option value="3">3 stars</option>
-              <option value="4">4 stars</option>
-              <option value="5">5 stars</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
             </select>
           </div>
           <div>

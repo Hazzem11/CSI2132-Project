@@ -32,6 +32,7 @@ app.get("/hotels", async (req, res) => {
      `;
 
     // Execute the SQL query
+    
     const { rows } = await pool.query(query, [
       `%${area}%`,
       `%${hotelChain}%`,
