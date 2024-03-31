@@ -2703,3 +2703,13 @@ VALUES ('12345', '3-31-2024', 'Mounir Ait Hamou', '123 Mounir St, Ottawa, Ontari
 -- Inserting data into the Employee table
 INSERT INTO Employee (employee_ssn, hotel_address, employee_full_name, employee_address)
 VALUES ('45678', '001 Hezi St, Montreal, Quebec, Canada', 'Hazzem Sukar', '532 Hazzem Rd, Ottawa, Ontario, Canada');
+
+
+
+
+
+
+CREATE INDEX idx_room_number_hotel_address ON Room (room_number, hotel_address);
+CREATE INDEX idx_roomamenity_room_hotel_amenity ON RoomAmenity (room_number, hotel_address, amenity_id);
+CREATE INDEX idx_renting_room_hotel_customer_employee_startdate 
+    ON Renting (room_number, hotel_address, customer_ssn, employee_ssn, renting_start_date);

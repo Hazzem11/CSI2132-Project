@@ -199,7 +199,7 @@ const queryParams = [
 app.post("/renting", async (req, res) => {
   try {
     
-    const { customer_full_name, room_number, hotel_address, employee_full_name,renting_date} = req.body;
+    const { customer_full_name, room_number, hotel_address, employee_full_name,renting_start_date} = req.body;
 
     
     const customerQuery = `
@@ -230,13 +230,13 @@ app.post("/renting", async (req, res) => {
 
    
     const rentingQuery = `
-      INSERT INTO Renting (customer_ssn, room_number, hotel_address, employee_ssn, renting_date)
+      INSERT INTO Renting (customer_ssn, room_number, hotel_address, employee_ssn, renting_start_date)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
     `;
 
     
-    const { rows: rentingRows } = await pool.query(rentingQuery, [customer_ssn, room_number, hotel_address, employee_ssn, renting_date ]);
+    const { rows: rentingRows } = await pool.query(rentingQuery, [customer_ssn, room_number, hotel_address, employee_ssn, renting_start_date ]);
 
     
     res.status(201).json({ renting: rentingRows[0], message: "Renting created successfully" });
@@ -273,17 +273,17 @@ app.post("/booking", async (req, res) => {
    
 
    
-    const rentingQuery = `
-      INSERT INTO Booking (customer_ssn, room_number, hotel_address, renting_date)
+    const bookingQuery = `
+      INSERT INTO Booking (customer_ssn, room_number, hotel_address, booking_date)
       VALUES ($1, $2, $3, $4)
       RETURNING *;
     `;
 
     
-    const { rows: rentingRows } = await pool.query(rentingQuery, [customer_ssn, room_number, hotel_address, renting_date ]);
+    const { rows: bookingRows } = await pool.query(rentingQuery, [customer_ssn, room_number, hotel_address, booking_date ]);
 
     
-    res.status(201).json({ renting: rentingRows[0], message: "Booking created successfully" });
+    res.status(201).json({ booking: bookingRows[0], message: "Booking created successfully" });
   } catch (error) {
    
     console.error("Error creating Booking:", error);
