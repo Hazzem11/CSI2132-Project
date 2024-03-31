@@ -14,8 +14,7 @@ function Book() {
     endDate: '',
     roomCapacity: '',
     roomPrice: '',
-    amenities: '',
-    hotel_address: hotel_address || '',   
+    hotel_address: hotel_address,   
   });
 
   // Function to handle form submission
@@ -40,8 +39,6 @@ function Book() {
         endDate: '',
         roomCapacity: '',
         roomPrice: '',
-        amenities: '',
-        area: '',
       });
     } catch (error) {
       console.error('Error fetching rooms:', error);
@@ -81,10 +78,6 @@ function Book() {
             <label htmlFor="roomPrice">Room Price:</label>
             <input type="number" id="roomPrice" name="roomPrice" value={formData.roomPrice} onChange={handleInputChange} />
           </div>
-          <div>
-            <label htmlFor="amenities">Amenities:</label>
-            <input type="text" id="amenities" name="amenities" value={formData.amenities} onChange={handleInputChange} />
-          </div>
           <button type="submit">Search</button>
         </form>
         </div>
@@ -92,8 +85,8 @@ function Book() {
         <h1>{hotel_address}</h1>
         <ul>
           {rooms.map((room) => (
-            <li key={room.id}>
-              Room Number: {room.}, {room.starRating}
+            <li key={room.room_number}>
+              Room Number: {room.room_number}, {room.capacity}, {room.price}, {room.view}
             </li>
           ))}
         </ul>

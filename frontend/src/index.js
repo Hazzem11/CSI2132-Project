@@ -31,6 +31,10 @@ const router = createBrowserRouter([
     element: <Book/>,
   },
   {
+    path: "booking/:hotel_address",
+    element: <Book/>,
+  },
+  {
     path: "profile",
     element: <Profile/>,
   },
