@@ -8,6 +8,9 @@ const port = 5000;
 app.use(cors());
 app.use(express.json());
 
+app.listen(5000, ()=>{
+  console.log("Server is listening")
+});
 //ROUTES//
 
 // Route to handle hotel search
@@ -15,20 +18,18 @@ app.get("/hotels", async (req, res) => {
   try {
     // Extract parameters from the request
     const { area, hotelChain, hotelCategory, totalRooms } = req.query;
-
     // Construct the SQL query
     const query = `
-       SELECT *
-       FROM hotel
-       WHERE hotel_address ILIKE $1
-         AND central_office_address ILIKE $2
-         AND star_rating = $3
-         AND EXISTS (
-           SELECT 1
-           FROM room
-           WHERE room.hotel_address = hotel.hotel_address
-             AND room.capacity >= $4
-         )
+        SELECT *
+        FROM hotel h
+        WHERE h.hotel_address ILIKE $1
+          AND h.central_office_address ILIKE $2
+          AND h.star_rating = $3
+          AND (
+            SELECT COUNT(*)
+            FROM Room r
+            WHERE r.hotel_address = h.hotel_address
+          ) >= $4
      `;
 
     // Execute the SQL query

@@ -15,8 +15,11 @@ function Hero() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch(`/hotels?area=${formData.area}&hotelChain=${formData.hotelChain}&hotelCategory=${formData.hotelCategory}&totalRooms=${formData.totalRooms}`);
+      const response = await fetch(`http://localhost:5000/hotels?area=${formData.area}&hotelChain=${formData.hotelChain}&hotelCategory=${formData.hotelCategory}&totalRooms=${formData.totalRooms}`);
+      
+      console.log(response)
       const data = await response.json();
+      console.log(data)
       setHotels(data.hotels); 
 
       // Clear the form data after successful submission
@@ -72,7 +75,7 @@ function Hero() {
             </select>
           </div>
           <div>
-            <label htmlFor="totalRooms">Max Number of Rooms:</label>
+            <label htmlFor="totalRooms">Minimum Rooms:</label>
             <input type="number" id="totalRooms" name="totalRooms" value={formData.totalRooms} onChange={handleInputChange} />
           </div>
           <button type="submit">Search</button>
