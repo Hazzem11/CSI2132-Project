@@ -21,7 +21,6 @@ function Hero() {
     try {
       const response = await fetch(`http://localhost:3001/hotels?area=${formData.area}&hotelChain=${formData.hotelChain}&hotelCategory=${formData.hotelCategory}&totalRooms=${formData.totalRooms}`);
       
-      console.log(response)
       const data = await response.json();
       console.log(data)
       setHotels(data.hotels); 
