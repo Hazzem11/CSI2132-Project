@@ -45,18 +45,17 @@ app.get("/hotels", async (req, res) => {
   }
 });
 
-app.get("/rooms", async (req, res) => {
+app.get("/rooms/:hotelAddress", async (req, res) => {
   try {
     // Extract parameters from the request
     const {
       startDate,
       endDate,
-      location,
       roomCapacity,
       roomPrice,
-      amenities,
-      starRating,
+      hotelAddress,
     } = req.query;
+
 
     // Construct the SQL query
     let query = `
@@ -70,8 +69,7 @@ app.get("/rooms", async (req, res) => {
           )
           AND r.capacity >= $3
           AND h.hotel_address ILIKE $4
-          AND h.star_rating = $5
-          AND r.price <= $6;
+          AND r.price <= $5;
 `;
 
 const queryParams = [
@@ -82,14 +80,7 @@ const queryParams = [
   starRating,
   roomPrice,
 ];
-    if (amenities) {
-      const amenityList = amenities.split(",");
-      const placeholders = amenityList
-        .map((_, index) => `$${index + 7}`)
-        .join(", ");
-      query += ` AND ra.amenity_id IN (${placeholders})`;
-      queryParams.push(...amenityList);
-    }
+
 
     // Execute the SQL query
     const { rows } = await pool.query(query, queryParams);
