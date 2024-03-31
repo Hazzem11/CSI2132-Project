@@ -31,7 +31,7 @@ app.get("/hotels", async (req, res) => {
         SELECT COUNT(*)
         FROM Room r
         WHERE r.hotel_address = h.hotel_address
-      ) => $4
+      ) >= $4
      `;
 
     // Execute the SQL query
