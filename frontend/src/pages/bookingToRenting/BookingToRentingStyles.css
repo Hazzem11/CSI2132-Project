@@ -1,4 +1,4 @@
-.hero {
+.rentingToBooking {
     width: 100%;
     height: 100vh;
     color: #fff;
@@ -22,7 +22,7 @@
     z-index: -1;
 }
 
-.hero .search {
+.rentingToBooking .search {
     position: absolute;
     display: flex;
     left: 0;
@@ -74,7 +74,7 @@
 }
 
 
-.hero .hotel-view {
+.hero .booking-view {
     position: absolute;
     display: flex;
     right: 0; /* Align the component to the right */
@@ -92,28 +92,28 @@
 }
 
 /* Style the hotels list */
-.hotel-view h1 {
+.booking-view h1 {
     color: #fff;
     font-size: 1.5rem;
     margin-bottom: 1rem;
 }
 
-.hotel-view ul {
+.booking-view ul {
     list-style-type: none;
     padding: 0;
 }
 
-.hotel-view li {
+.booking-view li {
     margin-bottom: 0.5rem;
     padding: 0.5rem;
     border: 1px solid #ccc;
 }
 
-.hotel-view li strong {
+.booking-view li strong {
     font-weight: bold;
 }
 
-.hotel-view li span {
+.booking-view li span {
     font-size: 0.8rem;
     color: #666;
 }
