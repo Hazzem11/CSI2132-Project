@@ -90,7 +90,7 @@ function Hero() {
       </li>
     ))}
   </ul>
-</div>
+    </div>
 
     </div> 
   );

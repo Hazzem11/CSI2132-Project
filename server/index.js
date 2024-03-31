@@ -136,6 +136,36 @@ const queryParams = [
     res.status(500).json({ error: "Internal server error" });
   }
 });
+app.get("/bookings", async (req, res) => {
+  try {
+    // Extract parameters from the request
+    const {
+      fullName,
+    } = req.query;
+
+    // Construct the SQL query
+    const query = `
+    SELECT *
+    FROM Booking
+    JOIN Customer ON Booking.customer_ssn = Customer.customer_ssn
+    WHERE Customer.customer_full_name ILIKE $1;
+    `;
+
+const queryParams = [
+  `%${fullName}%`
+];
+
+    // Execute the SQL query
+    const { rows } = await pool.query(query, queryParams);
+
+    // Send the response with the fetched rooms
+    res.json({ bookings: rows });
+  } catch (error) {
+    // Handle errors
+    console.error("Error executing query:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
