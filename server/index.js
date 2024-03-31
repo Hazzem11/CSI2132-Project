@@ -101,7 +101,44 @@ const queryParams = [
   }
 });
 
+app.get("/login", async (req, res) => {
+  try {
+    // Extract parameters from the request
+    const {
+      fullName,
+    } = req.query;
 
+    // Construct the SQL query
+    const query = `
+      SELECT customer_ssn AS user_ssn, customer_full_name AS user_full_name, customer_address AS user_address, 'Customer' AS user_type
+      FROM Customer
+      WHERE customer_full_name = '$1'
+      UNION
+      SELECT employee_ssn AS user_ssn, employee_full_name AS user_full_name, employee_address AS user_address, 'Employee' AS user_type
+      FROM Employee
+      WHERE employee_full_name = '$1';
+    `;
+
+const queryParams = [
+  `'${startDate}'`,
+  `'${endDate}'`,
+  roomCapacity,
+  `%${location}%`,
+  starRating,
+  roomPrice,
+];
+
+    // Execute the SQL query
+    const { rows } = await pool.query(query, queryParams);
+
+    // Send the response with the fetched rooms
+    res.json({ rooms: rows });
+  } catch (error) {
+    // Handle errors
+    console.error("Error executing query:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
