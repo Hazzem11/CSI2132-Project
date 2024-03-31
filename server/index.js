@@ -22,17 +22,16 @@ app.get("/hotels", async (req, res) => {
     const { area, hotelChain, hotelCategory, totalRooms } = req.query;
     // Construct the SQL query
     const query = `
-       SELECT *
-       FROM hotel
-       WHERE hotel_address ILIKE $1
-         AND central_office_address ILIKE $2
-         AND star_rating = $3
-         AND EXISTS (
-           SELECT 1
-           FROM room
-           WHERE room.hotel_address = hotel.hotel_address
-             AND room.capacity >= $4
-         )
+    SELECT *
+    FROM hotel h
+    WHERE h.hotel_address ILIKE $1
+      AND h.central_office_address ILIKE $2
+      AND h.star_rating = $3
+      AND (
+        SELECT COUNT(*)
+        FROM Room r
+        WHERE r.hotel_address = h.hotel_address
+      ) => $4
      `;
 
     // Execute the SQL query
@@ -68,27 +67,26 @@ app.get("/rooms", async (req, res) => {
 
     // Construct the SQL query
     let query = `
-       SELECT r.*
-       FROM room r
-       JOIN hotel h ON r.hotel_address = h.hotel_address
-       JOIN RoomAmenity ra ON r.room_number = ra.room_number AND r.hotel_address = ra.hotel_address
-       WHERE r.booking_start_date >= $1
-       AND r.booking_end_date <= $2
-       AND r.capacity >= $3
-       AND h.area ILIKE $4
-       AND h.star_rating = $5
-       AND r.price <= $6
-     `;
+  SELECT *
+  FROM room r
+  JOIN hotel h ON r.hotel_address = h.hotel_address
+  JOIN RoomAmenity ra ON r.room_number = ra.room_number AND r.hotel_address = ra.hotel_address
+  WHERE r.booking_start_date >= '$1'
+  AND r.booking_end_date <= '$2'
+  AND r.capacity >= $3
+  AND h.hotel_address ILIKE $4
+  AND h.star_rating = $5
+  AND r.price <= $6
+`;
 
-    const queryParams = [
-      startDate,
-      endDate,
-      roomCapacity,
-      `%${location}%`,
-      starRating,
-      roomPrice,
-    ];
-
+const queryParams = [
+  `'${startDate}'`,
+  `'${endDate}'`,
+  roomCapacity,
+  `%${location}%`,
+  starRating,
+  roomPrice,
+];
     if (amenities) {
       const amenityList = amenities.split(",");
       const placeholders = amenityList
