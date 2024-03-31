@@ -19,7 +19,7 @@ function Hero() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch(`http://localhost:5000/hotels?area=${formData.area}&hotelChain=${formData.hotelChain}&hotelCategory=${formData.hotelCategory}&totalRooms=${formData.totalRooms}`);
+      const response = await fetch(`http://localhost:3001/hotels?area=${formData.area}&hotelChain=${formData.hotelChain}&hotelCategory=${formData.hotelCategory}&totalRooms=${formData.totalRooms}`);
       
       console.log(response)
       const data = await response.json();

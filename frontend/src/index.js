@@ -1,22 +1,55 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import LogIn from './pages/login/LogIn';
 import Book from './pages/booking/book';
 import Profile from './pages/profile/Profile';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import BookingToRenting from './pages/bookingToRenting/BookingToRenting';
+import CreateRent from './pages/createRent/CreateRent';
 
-ReactDOM.render(
-  <Router>
-    <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="/login" element={<LogIn />} />
-      <Route path="/booking" element={<Book />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/booking/:hotel_address" element={<Book />} />
 
-    </Routes>
-  </Router>,
-  document.getElementById('root')
+
+// Rerouting from 1 page to another 
+
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App/>,
+  },
+  {
+    path: "login",
+    element: <LogIn/>,
+  },
+  {
+    path: "booking",
+    element: <Book/>,
+  },
+  {
+    path: "booking/:hotel_address",
+    element: <Book/>,
+  },
+  {
+    path: "profile",
+    element: <Profile/>,
+  },
+  {
+    path: "booking-to-renting",
+    element: <BookingToRenting/>,
+  },
+  {
+    path: "walk-in-rent",
+    element: <CreateRent/>,
+  },
+]);
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <RouterProvider router={router} />
 );
+<RouterProvider router={router} />

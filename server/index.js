@@ -2,12 +2,11 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
-const port = 5000;
+const port = 3001;
 
 //middleware
-app.use(cors());;
+app.use(cors());
 app.use(express.json());
-
 
 //ROUTES//
 
@@ -28,7 +27,7 @@ app.get("/hotels", async (req, res) => {
         WHERE r.hotel_address = h.hotel_address
       ) >= $4
      `;
-    
+
     const { rows } = await pool.query(query, [
       `%${area}%`,
       `%${hotelChain}%`,
@@ -48,39 +47,30 @@ app.get("/hotels", async (req, res) => {
 app.get("/rooms/:hotelAddress", async (req, res) => {
   try {
     // Extract parameters from the request
-    const {
-      startDate,
-      endDate,
-      roomCapacity,
-      roomPrice,
-      hotelAddress,
-    } = req.query;
-
+    const { startDate, endDate, roomCapacity, hotelAddress, roomPrice } =
+      req.query;
 
     // Construct the SQL query
     let query = `
-    SELECT *
-    FROM room r
-    JOIN hotel h ON r.hotel_address = h.hotel_address
-    JOIN RoomAmenity ra ON r.room_number = ra.room_number AND r.hotel_address = ra.hotel_address
-    WHERE (
-            (r.booking_start_date >= $1 OR r.booking_start_date IS NULL)
-            AND (r.booking_end_date <= $2 OR r.booking_end_date IS NULL)
-          )
-          AND r.capacity >= $3
-          AND h.hotel_address ILIKE $4
-          AND r.price <= $5;
+  SELECT r.room_number, r.*
+  FROM room r
+  JOIN hotel h ON r.hotel_address = h.hotel_address
+  WHERE (
+    (r.booking_start_date >= $1)
+    AND (r.booking_end_date <= $2)
+  )
+  AND r.capacity >= $3
+  AND h.hotel_address ILIKE $4
+  AND r.price <= $5;
 `;
 
-const queryParams = [
-  `${startDate}`,
-  `${endDate}`,
-  roomCapacity,
-  `%${location}%`,
-  starRating,
-  roomPrice,
-];
-
+    const queryParams = [
+      `${startDate}`,
+      `${endDate}`,
+      roomCapacity,
+      hotelAddress,
+      roomPrice,
+    ];
 
     // Execute the SQL query
     const { rows } = await pool.query(query, queryParams);
@@ -97,9 +87,7 @@ const queryParams = [
 app.get("/login", async (req, res) => {
   try {
     // Extract parameters from the request
-    const {
-      fullName,
-    } = req.query;
+    const { fullName } = req.query;
 
     // Construct the SQL query
     const query = `
@@ -112,9 +100,7 @@ app.get("/login", async (req, res) => {
       WHERE employee_full_name ILIKE $1;
     `;
 
-const queryParams = [
-  `%${fullName}%`
-];
+    const queryParams = [`%${fullName}%`];
 
     // Execute the SQL query
     const { rows } = await pool.query(query, queryParams);
@@ -246,10 +232,14 @@ const queryParams = [
 });
 app.post("/renting", async (req, res) => {
   try {
-    
-    const { customer_full_name, room_number, hotel_address, employee_full_name,renting_start_date} = req.body;
+    const {
+      customer_full_name,
+      room_number,
+      hotel_address,
+      employee_full_name,
+      renting_start_date,
+    } = req.body;
 
-    
     const customerQuery = `
       SELECT customer_ssn
       FROM Customer
@@ -261,10 +251,13 @@ app.post("/renting", async (req, res) => {
       WHERE employee_full_name ILIKE $4;
     `;
 
+    const { rows: customerRows } = await pool.query(customerQuery, [
+      `%${customer_full_name}%`,
+    ]);
+    const { rows: employeeRows } = await pool.query(employeeQuery, [
+      `%${employee_full_name}%`,
+    ]);
 
-    const { rows: customerRows } = await pool.query(customerQuery, [`%${customer_full_name}%`]);
-    const { rows: employeeRows } = await pool.query(employeeQuery, [`%${employee_full_name}%`]);
-    
     if (customerRows.length === 0) {
       console.log("No1");
     }
@@ -272,68 +265,75 @@ app.post("/renting", async (req, res) => {
       console.log("No2");
     }
 
-   
     const customer_ssn = customerRows[0].customer_ssn;
     const employee_ssn = employeeRows[0].employee_ssn;
 
-   
     const rentingQuery = `
       INSERT INTO Renting (customer_ssn, room_number, hotel_address, employee_ssn, renting_start_date)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
     `;
 
-    
-    const { rows: rentingRows } = await pool.query(rentingQuery, [customer_ssn, room_number, hotel_address, employee_ssn, renting_start_date ]);
+    const { rows: rentingRows } = await pool.query(rentingQuery, [
+      customer_ssn,
+      room_number,
+      hotel_address,
+      employee_ssn,
+      renting_start_date,
+    ]);
 
-    
-    res.status(201).json({ renting: rentingRows[0], message: "Renting created successfully" });
+    res
+      .status(201)
+      .json({
+        renting: rentingRows[0],
+        message: "Renting created successfully",
+      });
   } catch (error) {
-   
     console.error("Error creating renting:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 app.post("/booking", async (req, res) => {
   try {
-    
-    const { customer_full_name, room_number, hotel_address,booking_date} = req.body;
+    const { customer_full_name, room_number, hotel_address, booking_date } =
+      req.body;
 
-    
     const customerQuery = `
       SELECT customer_ssn
       FROM Customer
       WHERE customer_full_name ILIKE $1;
     `;
-    
 
+    const { rows: customerRows } = await pool.query(customerQuery, [
+      `%${customer_full_name}%`,
+    ]);
 
-    const { rows: customerRows } = await pool.query(customerQuery, [`%${customer_full_name}%`]);
-    
-    
     if (customerRows.length === 0) {
       console.log("No1");
     }
-    
 
-   
     const customer_ssn = customerRows[0].customer_ssn;
-   
 
-   
     const bookingQuery = `
       INSERT INTO Booking (customer_ssn, room_number, hotel_address, booking_date)
       VALUES ($1, $2, $3, $4)
       RETURNING *;
     `;
 
-    
-    const { rows: bookingRows } = await pool.query(rentingQuery, [customer_ssn, room_number, hotel_address, booking_date ]);
+    const { rows: bookingRows } = await pool.query(rentingQuery, [
+      customer_ssn,
+      room_number,
+      hotel_address,
+      booking_date,
+    ]);
 
-    
-    res.status(201).json({ booking: bookingRows[0], message: "Booking created successfully" });
+    res
+      .status(201)
+      .json({
+        booking: bookingRows[0],
+        message: "Booking created successfully",
+      });
   } catch (error) {
-   
     console.error("Error creating Booking:", error);
     res.status(500).json({ error: "Internal server error" });
   }
