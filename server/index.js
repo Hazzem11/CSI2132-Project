@@ -166,7 +166,130 @@ const queryParams = [
     res.status(500).json({ error: "Internal server error" });
   }
 });
+app.get("/rentings", async (req, res) => {
+  try {
+    // Extract parameters from the request
+    const {
+      fullName,
+    } = req.query;
 
+    // Construct the SQL query
+    const query = `
+    SELECT *
+    FROM Renting
+    JOIN Customer ON Renting.customer_ssn = Customer.customer_ssn
+    WHERE Customer.customer_full_name ILIKE $1;
+    `;
+
+const queryParams = [
+  `%${fullName}%`
+];
+
+    // Execute the SQL query
+    const { rows } = await pool.query(query, queryParams);
+
+    // Send the response with the fetched rooms
+    res.json({ rentings: rows });
+  } catch (error) {
+    // Handle errors
+    console.error("Error executing query:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+app.post("/renting", async (req, res) => {
+  try {
+    
+    const { customer_full_name, room_number, hotel_address, employee_full_name,renting_date} = req.body;
+
+    
+    const customerQuery = `
+      SELECT customer_ssn
+      FROM Customer
+      WHERE customer_full_name ILIKE $1;
+    `;
+    const employeeQuery = `
+      SELECT employee_ssn
+      FROM Employee
+      WHERE employee_full_name ILIKE $4;
+    `;
+
+
+    const { rows: customerRows } = await pool.query(customerQuery, [`%${customer_full_name}%`]);
+    const { rows: employeeRows } = await pool.query(employeeQuery, [`%${employee_full_name}%`]);
+    
+    if (customerRows.length === 0) {
+      console.log("No1");
+    }
+    if (employeeRows.length === 0) {
+      console.log("No2");
+    }
+
+   
+    const customer_ssn = customerRows[0].customer_ssn;
+    const employee_ssn = employeeRows[0].employee_ssn;
+
+   
+    const rentingQuery = `
+      INSERT INTO Renting (customer_ssn, room_number, hotel_address, employee_ssn, renting_date)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING *;
+    `;
+
+    
+    const { rows: rentingRows } = await pool.query(rentingQuery, [customer_ssn, room_number, hotel_address, employee_ssn, renting_date ]);
+
+    
+    res.status(201).json({ renting: rentingRows[0], message: "Renting created successfully" });
+  } catch (error) {
+   
+    console.error("Error creating renting:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+app.post("/booking", async (req, res) => {
+  try {
+    
+    const { customer_full_name, room_number, hotel_address,booking_date} = req.body;
+
+    
+    const customerQuery = `
+      SELECT customer_ssn
+      FROM Customer
+      WHERE customer_full_name ILIKE $1;
+    `;
+    
+
+
+    const { rows: customerRows } = await pool.query(customerQuery, [`%${customer_full_name}%`]);
+    
+    
+    if (customerRows.length === 0) {
+      console.log("No1");
+    }
+    
+
+   
+    const customer_ssn = customerRows[0].customer_ssn;
+   
+
+   
+    const rentingQuery = `
+      INSERT INTO Booking (customer_ssn, room_number, hotel_address, renting_date)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *;
+    `;
+
+    
+    const { rows: rentingRows } = await pool.query(rentingQuery, [customer_ssn, room_number, hotel_address, renting_date ]);
+
+    
+    res.status(201).json({ renting: rentingRows[0], message: "Booking created successfully" });
+  } catch (error) {
+   
+    console.error("Error creating Booking:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

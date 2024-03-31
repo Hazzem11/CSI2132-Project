@@ -104,7 +104,8 @@ CREATE TABLE Booking (
     customer_ssn VARCHAR(20) NOT NULL,
     room_number INT NOT NULL,
     hotel_address VARCHAR(255) NOT NULL,
-    PRIMARY KEY (customer_ssn, room_number, hotel_address),
+    booking_date DATE,
+    PRIMARY KEY (customer_ssn, room_number, hotel_address, booking_date),
     FOREIGN KEY (customer_ssn) REFERENCES Customer(customer_ssn) ON DELETE CASCADE,
     FOREIGN KEY (room_number, hotel_address) REFERENCES Room(room_number, hotel_address) ON DELETE CASCADE
 );
@@ -115,7 +116,8 @@ CREATE TABLE Renting (
     hotel_address VARCHAR(255) NOT NULL,
     customer_ssn VARCHAR(20) NOT NULL,
     employee_ssn VARCHAR(20) NOT NULL,
-    PRIMARY KEY (room_number, hotel_address, customer_ssn, employee_ssn),
+    renting_start_date DATE,
+    PRIMARY KEY (room_number, hotel_address, customer_ssn, employee_ssn, renting_start_date),
     FOREIGN KEY (room_number, hotel_address) REFERENCES Room(room_number, hotel_address) ON DELETE CASCADE,
     FOREIGN KEY (customer_ssn) REFERENCES Customer(customer_ssn) ON DELETE CASCADE,
     FOREIGN KEY (employee_ssn) REFERENCES Employee(employee_ssn) ON DELETE CASCADE
