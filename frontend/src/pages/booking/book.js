@@ -64,14 +64,7 @@ function Book() {
         console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
         console.log(fullName)
         
-console.log("Parameter values:", [
-  formData.startDate,
-  formData.endDate,
-  fullName,
-  hotel_address,
-  selectedRoomId,
-  employee_full_name
-]);
+
         const response2 = await fetch('http://localhost:3001/renting', {
       method: 'POST',
      headers: {

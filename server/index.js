@@ -175,12 +175,12 @@ app.get("/rentings", async (req, res) => {
     const customerQuery = `
       SELECT customer_ssn
       FROM Customer
-      WHERE customer_full_name ILIKE '$1';
+      WHERE customer_full_name ILIKE $1;
     `;
     const employeeQuery = `
       SELECT hotel_address, employee_ssn
       FROM Employee
-      WHERE employee_full_name ILIKE '$1';
+      WHERE employee_full_name ILIKE $1;
     `;
 
     const customerQueryParams = [`%${customer_full_name}%`];
