@@ -15,8 +15,8 @@ function BookingToRenting() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3001/bookings?fullName=${formData.fullName}
-      &employeeFullName=${formData.employeeFullName}
+      const response = await fetch(`http://localhost:3001/bookings?customer_full_name=${formData.fullName}
+      &employee_full_name=${formData.employeeFullName}
       `);
       const data = await response.json();
       setBookings(data.bookings); 

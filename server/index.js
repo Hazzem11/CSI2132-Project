@@ -119,41 +119,24 @@ app.get("/bookings", async (req, res) => {
   try {
     // Extract parameters from the request
     const {
-      fullName,
-      employeeFullName
+      customer_full_name,
+      employee_full_name
     } = req.query;
-    const customerQuery = `
-      SELECT customer_ssn
-      FROM Customer
-      WHERE customer_full_name ILIKE $1;
-    `;
-    const employeeQuery = `
-      SELECT hotel_address
-      FROM Employee
-      WHERE employee_full_name ILIKE $1;
-    `;
-
-
-    const { rows: customerRows } = await pool.query(customerQuery, [`%${fullName}%`]);
-    const { rows: employeeRows } = await pool.query(employeeQuery, [`%${employeeFullName}%`]);
-
-   
-    const customer_ssn = customerRows[0].customer_ssn;
-    const hotel_address = employeeRows[0].hotel_address;
+    
     // Construct the SQL query
     const query = `
-    SELECT *
-    FROM Booking
-    JOIN Customer ON Booking.customer_ssn = Customer.customer_ssn
-    WHERE Customer.customer_ssn = $1
-    AND hotel_address ILIKE $2;
+    SELECT r.*
+  FROM Renting r
+  JOIN Customer c ON r.customer_ssn = c.customer_ssn
+  JOIN Employee e ON r.employee_ssn = e.employee_ssn
+  WHERE c.customer_full_name = $1
+  AND e.employee_full_name = $2;
     `;
 
 const queryParams = [
-  customer_ssn,
-  `%${hotel_address}%`
+  `%${customer_full_name}%`,
+  `%${employee_full_name}%`
 ];
-
     // Execute the SQL query
     const { rows } = await pool.query(query, queryParams);
 
@@ -169,43 +152,23 @@ app.get("/rentings", async (req, res) => {
   try {
     // Extract parameters from the request
     const {
-      fullName,
-      employeeFullName
+      customer_full_name,
+      employee_full_name
     } = req.query;
-    const customerQuery = `
-      SELECT customer_ssn
-      FROM Customer
-      WHERE customer_full_name ILIKE $1;
-    `;
-    const employeeQuery = `
-      SELECT hotel_address, employee_ssn
-      FROM Employee
-      WHERE employee_full_name ILIKE $1;
-    `;
-
-    const customerQueryParams = [`%${customer_full_name}%`];
-    const employeeQueryParams = [`%${employee_full_name}%`];
-    const { rows: customerRows } = await pool.query(customerQuery,customerQueryParams);
-    const { rows: employeeRows } = await pool.query(employeeQuery, employeeQueryParams);
-
-   
-    const customer_ssn = customerRows[0].customer_ssn;
-    const employee_ssn = employeeRows[0].employee_ssn;
-    const hotel_address = employeeRows[0].hotel_address;
+    
     // Construct the SQL query
     const query = `
-    SELECT *
-    FROM Renting
-    JOIN Customer ON Renting.customer_ssn = Customer.customer_ssn
-    WHERE Customer.customer_ssn = $1
-    AND hotel_address ILIKE $2;
-    AND employee_ssn = $3;
+    SELECT r.*
+  FROM Renting r
+  JOIN Customer c ON r.customer_ssn = c.customer_ssn
+  JOIN Employee e ON r.employee_ssn = e.employee_ssn
+  WHERE c.customer_full_name = $1
+  AND e.employee_full_name = $2;
     `;
 
 const queryParams = [
-  customer_ssn,
-  `%${hotel_address}%`,
-  employee_ssn
+  `%${customer_full_name}%`,
+  `%${employee_full_name}%`
 ];
 
     // Execute the SQL query
