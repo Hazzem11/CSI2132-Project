@@ -1,4 +1,3 @@
-
 -- HotelChain table
 CREATE TABLE HotelChain (
     central_office_address VARCHAR(255) NOT NULL,
@@ -104,8 +103,9 @@ CREATE TABLE Booking (
     customer_ssn VARCHAR(20) NOT NULL,
     room_number INT NOT NULL,
     hotel_address VARCHAR(255) NOT NULL,
-    booking_date DATE,
-    PRIMARY KEY (customer_ssn, room_number, hotel_address, booking_date),
+    booking_start_date DATE,
+    booking_end_date DATE,
+    PRIMARY KEY (customer_ssn, room_number, hotel_address, booking_start_date),
     FOREIGN KEY (customer_ssn) REFERENCES Customer(customer_ssn) ON DELETE CASCADE,
     FOREIGN KEY (room_number, hotel_address) REFERENCES Room(room_number, hotel_address) ON DELETE CASCADE
 );
@@ -117,6 +117,7 @@ CREATE TABLE Renting (
     customer_ssn VARCHAR(20) NOT NULL,
     employee_ssn VARCHAR(20) NOT NULL,
     renting_start_date DATE,
+    renting_end_date DATE,
     PRIMARY KEY (room_number, hotel_address, customer_ssn, employee_ssn, renting_start_date),
     FOREIGN KEY (room_number, hotel_address) REFERENCES Room(room_number, hotel_address) ON DELETE CASCADE,
     FOREIGN KEY (customer_ssn) REFERENCES Customer(customer_ssn) ON DELETE CASCADE,

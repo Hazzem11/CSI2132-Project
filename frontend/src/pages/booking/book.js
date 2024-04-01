@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import BookingNavbar from "./BookingNavbar";
+import EmployeeNavbar from "../../components/navbar/EmployeeNavbar";
 import { useParams } from "react-router-dom";
 import "./BookingStyling.css";
 import Video from "../../assets/cool-hotel.mp4";
 
 function Book() {
-  // State variables to store form input values and fetched rooms
-  const { hotel_address } = useParams(); // Get hotel_address from URL params
-
+  let purpose = ""
+  const [fullName, setFullName] = useState("");
   const [rooms, setRooms] = useState([]);
   const [formData, setFormData] = useState({
     startDate: "",
@@ -15,49 +15,103 @@ function Book() {
     roomCapacity: "",
     roomPrice: "",
   });
-
-  // Function to handle form submission
+  const [showBookingForm, setShowBookingForm] = useState(false);
+  const [selectedRoomId, setSelectedRoomId] = useState(null);
+  const { employee_full_name,hotel_address } = useParams();
+  console.log(employee_full_name);
+  console.log(hotel_address);
+  if (employee_full_name === undefined) {
+    purpose = "Book Room";
+  } else {
+    purpose = "Rent Room";
+  }
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      // Make GET request to backend API with form data
-      const response =
-        await fetch(`http://localhost:3001/rooms?startDate=${formData.startDate}
+      const response = await fetch(`http://localhost:3001/rooms?startDate=${formData.startDate}
         &endDate=${formData.endDate}
         &roomCapacity=${formData.roomCapacity}
         &hotel_address=${hotel_address}
-        &roomPrice=${formData.roomPrice}
-        `);
+        &roomPrice=${formData.roomPrice}`);
 
       const data = await response.json();
-
-      setRooms(data.rooms); // Update rooms state with fetched rooms
-
-      // Clear the form data after successful submission
-      setFormData({
-        startDate: "",
-        endDate: "",
-        roomCapacity: "",
-        roomPrice: "",
-      });
+      console.log(data);
+      setRooms(data.rooms);
+      
     } catch (error) {
       console.error("Error fetching rooms:", error);
-      // Handle errors
+    }
+  };
+  const handleBookingSubmit = async (event) => {
+  
+    try {
+      if (purpose === "Book Room"){
+        const response2 = await fetch('http://localhost:3001/booking', {
+      method: 'POST',
+     headers: {
+    'Content-Type': 'application/json',
+      },
+    body: JSON.stringify({
+    booking_start_date: formData.startDate,
+    booking_end_date: formData.endDate,
+    customer_full_name: fullName,
+    hotel_address: hotel_address,
+    room_number: selectedRoomId
+     }),
+    });
+      }
+      else{
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        console.log(fullName)
+        
+console.log("Parameter values:", [
+  formData.startDate,
+  formData.endDate,
+  fullName,
+  hotel_address,
+  selectedRoomId,
+  employee_full_name
+]);
+        const response2 = await fetch('http://localhost:3001/renting', {
+      method: 'POST',
+     headers: {
+    'Content-Type': 'application/json',
+      },
+    body: JSON.stringify({
+    booking_start_date: formData.startDate,
+    booking_end_date: formData.endDate,
+    customer_full_name: fullName,
+    hotel_address: hotel_address,
+    room_number: selectedRoomId,
+    employee_full_name : employee_full_name
+     }),
+    });
+      }
+      setShowBookingForm(false);
+      setSelectedRoomId(null);
+    } catch (error) {
+      console.error("Error fetching rooms:", error);
     }
   };
 
-  // Function to handle input changes
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  const handleButtonClick = (roomId) => {
+    setShowBookingForm(true);
+    setSelectedRoomId(roomId);
+  };
+
+  
 
   return (
     <div className="booking">
       <video autoPlay loop muted id="video">
         <source src={Video} type="video/mp4" />
       </video>
-      <BookingNavbar />
+      {employee_full_name === undefined ? <BookingNavbar /> : <EmployeeNavbar />}
       <div className="overlay"></div>
       <div className="search">
         <form className="form" onSubmit={handleSubmit}>
@@ -109,8 +163,19 @@ function Book() {
         <ul>
           {rooms.map((room) => (
             <li key={room.room_number}>
-              Room Number: {room.room_number}, {room.capacity}, {room.price}
-              {/* <button onClick={() => handleBookRooms(hotel.hotel_address)}>View Rooms</button> */}
+              Room Number: {room.room_number}, {room.capacity} people, ${room.price}
+              <button onClick={() => handleButtonClick(room.room_number)}>{purpose}</button>
+              {showBookingForm && selectedRoomId === room.room_number && (
+                <div>
+                <input
+                  type="text"
+                  placeholder="Enter Full Name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                />
+                <button onClick={() => handleBookingSubmit(fullName)}>Submit</button>
+              </div>
+              )}
             </li>
           ))}
         </ul>

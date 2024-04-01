@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './BookingToRentingStyles.css';
 import Video from '../../assets/cool-hotel.mp4';
-import EmployeeNavbar from '../../components/employeeNavbar/EmployeeNavbar';
+import EmployeeNavbar from '../../components/navbar/EmployeeNavbar';
 
 function BookingToRenting() {
   const [bookings, setBookings] = useState([]);
@@ -20,7 +20,7 @@ function BookingToRenting() {
       `);
       
       const data = await response.json();
-      setBookings(data); 
+      setBookings(data.bookings); 
 
       // Clear the form data after successful submission
       setFormData({
@@ -60,6 +60,14 @@ function BookingToRenting() {
     </div>
 <div className='booking-view'>
 <h1>Current Bookings</h1>
+<ul>
+    {bookings.map((booking) => (
+      <li key={booking.customer_ssn}>
+        {booking.room_number} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stars: {booking.hotel_address}
+        {/* <button onClick={() => handleViewRooms(hotel.hotel_address)}>View Rooms</button> */}
+      </li>
+    ))}
+  </ul>
 </div>
   </div> 
 );

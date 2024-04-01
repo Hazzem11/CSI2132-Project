@@ -6,7 +6,6 @@ import LogIn from './pages/login/LogIn';
 import Book from './pages/booking/book';
 import Profile from './pages/profile/Profile';
 import BookingToRenting from './pages/bookingToRenting/BookingToRenting';
-import CreateRent from './pages/createRent/CreateRent';
 
 
 
@@ -20,18 +19,18 @@ import {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App/>,
+    element: <LogIn/>,
   },
   {
-    path: "login",
-    element: <LogIn/>,
+    path: "/home",
+    element: <App/>,
   },
   {
     path: "booking",
     element: <Book/>,
   },
   {
-    path: "booking/:hotel_address",
+    path: "booking/:employee_full_name/:hotel_address",
     element: <Book/>,
   },
   {
@@ -41,10 +40,6 @@ const router = createBrowserRouter([
   {
     path: "booking-to-renting",
     element: <BookingToRenting/>,
-  },
-  {
-    path: "walk-in-rent",
-    element: <CreateRent/>,
   },
 ]);
 

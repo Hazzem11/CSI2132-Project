@@ -89,14 +89,14 @@ app.get("/login", async (req, res) => {
   try {
     // Extract parameters from the request
     const { fullName } = req.query;
-
+    console.log("AAAAAAAAAAAAAAAAAAAAAAAA");
     // Construct the SQL query
     const query = `
-      SELECT customer_ssn AS user_ssn, customer_full_name AS user_full_name, customer_address AS user_address, 'Customer' AS user_type
+      SELECT customer_ssn AS user_ssn, customer_full_name AS user_full_name, customer_address AS user_address, 'Customer' AS user_type, 'NULL' AS hotel_address
       FROM Customer
       WHERE customer_full_name ILIKE $1
       UNION
-      SELECT employee_ssn AS user_ssn, employee_full_name AS user_full_name, employee_address AS user_address, 'Employee' AS user_type
+      SELECT employee_ssn AS user_ssn, employee_full_name AS user_full_name, employee_address AS user_address, 'Employee' AS user_type, hotel_address AS hotel_address
       FROM Employee
       WHERE employee_full_name ILIKE $1;
     `;
@@ -135,13 +135,6 @@ app.get("/bookings", async (req, res) => {
 
     const { rows: customerRows } = await pool.query(customerQuery, [`%${fullName}%`]);
     const { rows: employeeRows } = await pool.query(employeeQuery, [`%${employeeFullName}%`]);
-    
-    if (customerRows.length === 0) {
-      console.log("No1");
-    }
-    if (employeeRows.length === 0) {
-      console.log("No2");
-    }
 
    
     const customer_ssn = customerRows[0].customer_ssn;
@@ -192,13 +185,6 @@ app.get("/rentings", async (req, res) => {
 
     const { rows: customerRows } = await pool.query(customerQuery, [`%${customer_full_name}%`]);
     const { rows: employeeRows } = await pool.query(employeeQuery, [`%${employee_full_name}%`]);
-    
-    if (customerRows.length === 0) {
-      console.log("No1");
-    }
-    if (employeeRows.length === 0) {
-      console.log("No2");
-    }
 
    
     const customer_ssn = customerRows[0].customer_ssn;
@@ -239,6 +225,7 @@ app.post("/renting", async (req, res) => {
       hotel_address,
       employee_full_name,
       renting_start_date,
+      renting_end_date
     } = req.body;
 
     const customerQuery = `
@@ -249,38 +236,43 @@ app.post("/renting", async (req, res) => {
     const employeeQuery = `
       SELECT employee_ssn
       FROM Employee
-      WHERE employee_full_name ILIKE $4;
+      WHERE employee_full_name ILIKE $1;
     `;
+    
 
-    const { rows: customerRows } = await pool.query(customerQuery, [
-      `%${customer_full_name}%`,
+    const { customerRows } = await pool.query(customerQuery, [
+      `%${customer_full_name}%`
     ]);
-    const { rows: employeeRows } = await pool.query(employeeQuery, [
+    
+    const { employeeRows } = await pool.query(employeeQuery, [
       `%${employee_full_name}%`,
     ]);
 
-    if (customerRows.length === 0) {
+    if (customerRows === undefined) {
       console.log("No1");
     }
-    if (employeeRows.length === 0) {
+    if (employeeRows === undefined) {
       console.log("No2");
     }
-
+    
     const customer_ssn = customerRows[0].customer_ssn;
     const employee_ssn = employeeRows[0].employee_ssn;
-
+    
     const rentingQuery = `
-      INSERT INTO Renting (customer_ssn, room_number, hotel_address, employee_ssn, renting_start_date)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO Renting (customer_ssn, room_number, hotel_address, employee_ssn, renting_start_date,renting_end_date)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *;
     `;
-
+    console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+    console.log(customer_ssn);
+    console.log(employee_ssn);
     const { rows: rentingRows } = await pool.query(rentingQuery, [
-      customer_ssn,
+      `${customer_ssn}`,
       room_number,
       hotel_address,
-      employee_ssn,
+      `${employee_ssn}`,
       renting_start_date,
+      rentind_end_date
     ]);
 
     res
@@ -296,7 +288,7 @@ app.post("/renting", async (req, res) => {
 });
 app.post("/booking", async (req, res) => {
   try {
-    const { customer_full_name, room_number, hotel_address, booking_date } =
+    const { customer_full_name, room_number, hotel_address, booking_start_date, booking_end_date } =
       req.body;
 
     const customerQuery = `
@@ -314,18 +306,19 @@ app.post("/booking", async (req, res) => {
     }
 
     const customer_ssn = customerRows[0].customer_ssn;
-
+    
     const bookingQuery = `
-      INSERT INTO Booking (customer_ssn, room_number, hotel_address, booking_date)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO Booking (customer_ssn, room_number, hotel_address, booking_start_date, booking_end_date)
+      VALUES ($1, $2, $3, $4,$5)
       RETURNING *;
     `;
 
-    const { rows: bookingRows } = await pool.query(rentingQuery, [
+    const { rows: bookingRows } = await pool.query(bookingQuery, [
       customer_ssn,
       room_number,
       hotel_address,
-      booking_date,
+      booking_start_date,
+      booking_end_date
     ]);
 
     res
@@ -336,6 +329,31 @@ app.post("/booking", async (req, res) => {
       });
   } catch (error) {
     console.error("Error creating Booking:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+app.get("/myHotel", async (req, res) => {
+  try {
+    // Extract parameters from the request
+    const { employee_full_name } = req.query;
+
+    // Construct the SQL query
+    const query = `
+      SELECT hotel_address
+      FROM employee
+      WHERE employee_full_name = $1
+    `;
+
+    const queryParams = ['employee_full_name'];
+
+    // Execute the SQL query
+    const { rows } = await pool.query(query, queryParams);
+
+    // Send the response with the fetched rooms
+    res.json({ users: rows });
+  } catch (error) {
+    // Handle errors
+    console.error("Error executing query:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

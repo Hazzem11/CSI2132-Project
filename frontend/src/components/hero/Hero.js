@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import './HeroStyles.css';
 import Video from '../../assets/cool-hotel.mp4';
+import { useParams } from "react-router-dom";
 
 function Hero() {
   // State variables to store form input values
+  
   const [hotels, setHotels] = useState([]);
   const [formData, setFormData] = useState({
     area: '',
@@ -15,6 +17,7 @@ function Hero() {
 
   const navigate = useNavigate();
 
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -45,6 +48,7 @@ function Hero() {
 
  
   const handleViewRooms = (hotel_address) => {
+
     navigate(`/booking/${hotel_address}`); 
   };
 

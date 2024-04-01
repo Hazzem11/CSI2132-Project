@@ -10,10 +10,8 @@ function BookingNavbar() {
         <h2>Find your next stay</h2>
       </div>
       <ul className="nav-menu">
-      <li><Link to="/"><button className="nav-button">Home</button></Link></li>
+      <li><Link to="/home"><button className="nav-button">Home</button></Link></li>
       <li><Link to="/booking"><button className="nav-button">Book</button></Link></li>
-      <li><Link to="/login"><button className="login-button">Sign Up</button></Link></li>
-      <li><Link to="/profile"><button className="profile-button">Profile</button></Link></li>
     </ul>
     
     </div>
