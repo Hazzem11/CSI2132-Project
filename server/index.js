@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
+const e = require("express");
 const port = 3001;
 
 //middleware
@@ -174,17 +175,18 @@ app.get("/rentings", async (req, res) => {
     const customerQuery = `
       SELECT customer_ssn
       FROM Customer
-      WHERE customer_full_name ILIKE $1;
+      WHERE customer_full_name ILIKE '$1';
     `;
     const employeeQuery = `
       SELECT hotel_address, employee_ssn
       FROM Employee
-      WHERE employee_full_name ILIKE $1;
+      WHERE employee_full_name ILIKE '$1';
     `;
 
-
-    const { rows: customerRows } = await pool.query(customerQuery, [`%${customer_full_name}%`]);
-    const { rows: employeeRows } = await pool.query(employeeQuery, [`%${employee_full_name}%`]);
+    const customerQueryParams = [`%${customer_full_name}%`];
+    const employeeQueryParams = [`%${employee_full_name}%`];
+    const { rows: customerRows } = await pool.query(customerQuery,customerQueryParams);
+    const { rows: employeeRows } = await pool.query(employeeQuery, employeeQueryParams);
 
    
     const customer_ssn = customerRows[0].customer_ssn;
@@ -227,52 +229,27 @@ app.post("/renting", async (req, res) => {
       renting_start_date,
       renting_end_date
     } = req.body;
-
-    const customerQuery = `
-      SELECT customer_ssn
-      FROM Customer
-      WHERE customer_full_name ILIKE $1;
-    `;
-    const employeeQuery = `
-      SELECT employee_ssn
-      FROM Employee
-      WHERE employee_full_name ILIKE $1;
-    `;
     
-
-    const { customerRows } = await pool.query(customerQuery, [
-      `%${customer_full_name}%`
-    ]);
-    
-    const { employeeRows } = await pool.query(employeeQuery, [
-      `%${employee_full_name}%`,
-    ]);
-
-    if (customerRows === undefined) {
-      console.log("No1");
-    }
-    if (employeeRows === undefined) {
-      console.log("No2");
-    }
-    
-    const customer_ssn = customerRows[0].customer_ssn;
-    const employee_ssn = employeeRows[0].employee_ssn;
     
     const rentingQuery = `
-      INSERT INTO Renting (customer_ssn, room_number, hotel_address, employee_ssn, renting_start_date,renting_end_date)
-      VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING *;
+    INSERT INTO Renting (room_number, hotel_address, customer_ssn, employee_ssn, renting_start_date, renting_end_date)
+    SELECT 
+        $2, 
+        $3, 
+        (SELECT customer_ssn FROM Customer WHERE customer_full_name ILIKE $1), 
+        (SELECT employee_ssn FROM Employee WHERE employee_full_name ILIKE $4), 
+        $5, 
+        $6
+    RETURNING *;
     `;
-    console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-    console.log(customer_ssn);
-    console.log(employee_ssn);
+    
     const { rows: rentingRows } = await pool.query(rentingQuery, [
-      `${customer_ssn}`,
+      `%${customer_full_name}%`,
       room_number,
-      hotel_address,
-      `${employee_ssn}`,
-      renting_start_date,
-      rentind_end_date
+      `${hotel_address}`,
+      `%${employee_full_name}%`,
+      `${renting_start_date}`,
+      `${renting_end_date}`
     ]);
 
     res

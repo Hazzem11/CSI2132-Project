@@ -78,8 +78,8 @@ console.log("Parameter values:", [
     'Content-Type': 'application/json',
       },
     body: JSON.stringify({
-    booking_start_date: formData.startDate,
-    booking_end_date: formData.endDate,
+    renting_start_date: formData.startDate,
+    renting_end_date: formData.endDate,
     customer_full_name: fullName,
     hotel_address: hotel_address,
     room_number: selectedRoomId,
