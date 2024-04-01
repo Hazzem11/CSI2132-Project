@@ -18,9 +18,9 @@ function LogIn() {
     try {
       const response = await fetch(`http://localhost:3001/login?fullName=${formData.fullName}`);
       const data = await response.json();
-      console.log(data)
       setUser(data.users[0]);
-
+      console.log("Current User")
+      console.log(data.users[0].user_type)
     
 
       // Redirect based on user_type
@@ -28,8 +28,8 @@ function LogIn() {
         console.log(data.users[0].user_full_name);
         navigate(`/booking/${data.users[0].user_full_name}/${data.users[0].hotel_address}`); 
         
-      } else if (data.users[0].user_type === "Customer") {
-        navigate("/");
+      } else if (data.users[0].user_type === 'Customer') {
+        navigate("/home");
       }
     } catch (error) {
       console.error('Error fetching hotels:', error);

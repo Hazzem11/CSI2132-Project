@@ -57,7 +57,7 @@ function BookingToRenting() {
 <h1>Current Bookings</h1>
 <ul>
     {bookings.map((booking) => (
-      <li key={`${booking.customer_ssn}-${booking.room_number}-${booking.hotel_address}`}>
+      <li key={booking.customer_ssn}>
         {booking.room_number} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stars: {booking.hotel_address}
         {/* <button onClick={() => handleViewRooms(hotel.hotel_address)}>View Rooms</button> */}
       </li>
