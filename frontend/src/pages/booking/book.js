@@ -20,7 +20,7 @@ function Book() {
   const { employee_full_name,hotel_address } = useParams();
   console.log(employee_full_name);
   console.log(hotel_address);
-  if (employee_full_name === undefined) {
+  if (employee_full_name === 'undefined') {
     purpose = "Book Room";
   } else {
     purpose = "Rent Room";
@@ -104,7 +104,7 @@ function Book() {
       <video autoPlay loop muted id="video">
         <source src={Video} type="video/mp4" />
       </video>
-      {employee_full_name === undefined ? <BookingNavbar /> : <EmployeeNavbar />}
+      {employee_full_name === 'undefined' ? <BookingNavbar /> : <EmployeeNavbar />}
       <div className="overlay"></div>
       <div className="search">
         <form className="form" onSubmit={handleSubmit}>

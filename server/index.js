@@ -119,8 +119,7 @@ app.get("/bookings", async (req, res) => {
   try {
     // Extract parameters from the request
     const {
-      customer_full_name,
-      employee_full_name
+      customer_full_name
     } = req.query;
     
     // Construct the SQL query
@@ -128,14 +127,11 @@ app.get("/bookings", async (req, res) => {
     SELECT b.*
   FROM Booking b
   JOIN Customer c ON b.customer_ssn = c.customer_ssn
-  JOIN Employee e ON b.employee_ssn = e.employee_ssn
-  WHERE c.customer_full_name = $1
-  AND e.employee_full_name = $2;
+  WHERE c.customer_full_name ILIKE $1;
     `;
 
 const queryParams = [
-  `%${customer_full_name}%`,
-  `%${employee_full_name}%`
+  `%${customer_full_name}%`
 ];
     // Execute the SQL query
     const { rows } = await pool.query(query, queryParams);

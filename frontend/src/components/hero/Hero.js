@@ -49,7 +49,7 @@ function Hero() {
  
   const handleViewRooms = (hotel_address) => {
 
-    navigate(`/booking/${hotel_address}`); 
+    navigate(`/booking/${undefined}/${hotel_address}`); 
   };
 
   return (
