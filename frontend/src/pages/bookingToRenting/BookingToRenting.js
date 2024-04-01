@@ -61,7 +61,6 @@ function BookingToRenting() {
 <div className='booking-view'>
 <h1>Current Bookings</h1>
 </div>
-
   </div> 
 );
 }

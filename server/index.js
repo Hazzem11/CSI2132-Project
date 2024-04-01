@@ -65,19 +65,19 @@ app.get("/rooms", async (req, res) => {
 `;
 
     const queryParams = [
-      `${startDate}`.trim(),
-      `${endDate}`.trim(),
+      `${startDate.trim()}`,
+      `${endDate.trim()}`,
       parseInt(roomCapacity.trim()),
-      hotel_address.trim(),
-      parseInt(roomPrice),
+      `%${hotel_address.trim()}%`,
+      parseInt(roomPrice.trim()),
     ];
 
     // Execute the SQL query
-    console.log(queryParams);
+    console.log(queryParams)
     const { rows } = await pool.query(query, queryParams);
 
     // Send the response with the fetched rooms
- res.json({rooms: rows});
+    res.json({ rooms: rows });
   } catch (error) {
     // Handle errors
     console.error("Error executing query:", error);
@@ -117,7 +117,10 @@ app.get("/login", async (req, res) => {
 app.get("/bookings", async (req, res) => {
   try {
     // Extract parameters from the request
-    const { fullName, employeeFullName } = req.query;
+    const {
+      fullName,
+      employeeFullName
+    } = req.query;
     const customerQuery = `
       SELECT customer_ssn
       FROM Customer
@@ -129,13 +132,10 @@ app.get("/bookings", async (req, res) => {
       WHERE employee_full_name ILIKE $1;
     `;
 
-    const { rows: customerRows } = await pool.query(customerQuery, [
-      `%${customer_full_name}%`,
-    ]);
-    const { rows: employeeRows } = await pool.query(employeeQuery, [
-      `%${employee_full_name}%`,
-    ]);
 
+    const { rows: customerRows } = await pool.query(customerQuery, [`%${fullName}%`]);
+    const { rows: employeeRows } = await pool.query(employeeQuery, [`%${employeeFullName}%`]);
+    
     if (customerRows.length === 0) {
       console.log("No1");
     }
@@ -143,6 +143,7 @@ app.get("/bookings", async (req, res) => {
       console.log("No2");
     }
 
+   
     const customer_ssn = customerRows[0].customer_ssn;
     const hotel_address = employeeRows[0].hotel_address;
     // Construct the SQL query
@@ -154,7 +155,10 @@ app.get("/bookings", async (req, res) => {
     AND hotel_address ILIKE $2;
     `;
 
-    const queryParams = [customer_ssn, `%${hotel_address}%`];
+const queryParams = [
+  customer_ssn,
+  `%${hotel_address}%`
+];
 
     // Execute the SQL query
     const { rows } = await pool.query(query, queryParams);
@@ -170,7 +174,10 @@ app.get("/bookings", async (req, res) => {
 app.get("/rentings", async (req, res) => {
   try {
     // Extract parameters from the request
-    const { fullName, employeeFullName } = req.query;
+    const {
+      fullName,
+      employeeFullName
+    } = req.query;
     const customerQuery = `
       SELECT customer_ssn
       FROM Customer
@@ -182,13 +189,10 @@ app.get("/rentings", async (req, res) => {
       WHERE employee_full_name ILIKE $1;
     `;
 
-    const { rows: customerRows } = await pool.query(customerQuery, [
-      `%${customer_full_name}%`,
-    ]);
-    const { rows: employeeRows } = await pool.query(employeeQuery, [
-      `%${employee_full_name}%`,
-    ]);
 
+    const { rows: customerRows } = await pool.query(customerQuery, [`%${customer_full_name}%`]);
+    const { rows: employeeRows } = await pool.query(employeeQuery, [`%${employee_full_name}%`]);
+    
     if (customerRows.length === 0) {
       console.log("No1");
     }
@@ -196,6 +200,7 @@ app.get("/rentings", async (req, res) => {
       console.log("No2");
     }
 
+   
     const customer_ssn = customerRows[0].customer_ssn;
     const employee_ssn = employeeRows[0].employee_ssn;
     const hotel_address = employeeRows[0].hotel_address;
@@ -209,7 +214,11 @@ app.get("/rentings", async (req, res) => {
     AND employee_ssn = $3;
     `;
 
-    const queryParams = [customer_ssn, `%${hotel_address}%`, employee_ssn];
+const queryParams = [
+  customer_ssn,
+  `%${hotel_address}%`,
+  employee_ssn
+];
 
     // Execute the SQL query
     const { rows } = await pool.query(query, queryParams);
@@ -274,10 +283,12 @@ app.post("/renting", async (req, res) => {
       renting_start_date,
     ]);
 
-    res.status(201).json({
-      renting: rentingRows[0],
-      message: "Renting created successfully",
-    });
+    res
+      .status(201)
+      .json({
+        renting: rentingRows[0],
+        message: "Renting created successfully",
+      });
   } catch (error) {
     console.error("Error creating renting:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -317,10 +328,12 @@ app.post("/booking", async (req, res) => {
       booking_date,
     ]);
 
-    res.status(201).json({
-      booking: bookingRows[0],
-      message: "Booking created successfully",
-    });
+    res
+      .status(201)
+      .json({
+        booking: bookingRows[0],
+        message: "Booking created successfully",
+      });
   } catch (error) {
     console.error("Error creating Booking:", error);
     res.status(500).json({ error: "Internal server error" });
