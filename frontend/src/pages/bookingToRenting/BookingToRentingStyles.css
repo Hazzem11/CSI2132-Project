@@ -74,7 +74,7 @@
 }
 
 
-.hero .booking-view {
+.rentingToBooking .booking-view {
     position: absolute;
     display: flex;
     right: 0; /* Align the component to the right */

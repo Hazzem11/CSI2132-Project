@@ -31,6 +31,33 @@ function BookingToRenting() {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
+  const handleSubmitRent = async (roomNumber,hotel_address,booking_start_date,booking_end_date ) => {
+  
+    try {
+      console.log(roomNumber,hotel_address,booking_start_date,booking_end_date,formData.fullName,formData.employeeFullName);
+        const response2 = await fetch('http://localhost:3001/renting', {
+      method: 'POST',
+     headers: {
+    'Content-Type': 'application/json',
+      },
+    body: JSON.stringify({
+    booking_start_date: booking_start_date,
+    booking_end_date: booking_end_date,
+    customer_full_name: formData.fullName,
+    hotel_address: hotel_address,
+    room_number: roomNumber,
+    employee_full_name: formData.employeeFullName
+     }),
+    });
+      
+      
+    } catch (error) {
+      console.error("Error renting room:", error);
+    }
+  };
+
+
+
     
     return ( 
     <div className='rentingToBooking'>
@@ -58,7 +85,7 @@ function BookingToRenting() {
     {bookings.map((booking) => (
       <li key={booking.customer_ssn}>
         {booking.room_number} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stars: {booking.hotel_address}
-        {/* <button onClick={() => handleViewRooms(hotel.hotel_address)}>View Rooms</button> */}
+        <button onClick={() => handleSubmitRent(booking.room_number,booking.hotel_address,booking.booking_start_date,booking.booking_end_date)}>Rent Out</button>
       </li>
     ))}
   </ul>
