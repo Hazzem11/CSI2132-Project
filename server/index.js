@@ -201,6 +201,7 @@ app.post("/renting", async (req, res) => {
         $6
     RETURNING *;
     `;
+    console.log(room_number, hotel_address, customer_full_name, employee_full_name, renting_start_date, renting_end_date  );
     
     const { rows: rentingRows } = await pool.query(rentingQuery, [
       `%${customer_full_name}%`,
@@ -290,6 +291,63 @@ app.get("/myHotel", async (req, res) => {
   } catch (error) {
     // Handle errors
     console.error("Error executing query:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+app.post("/bookingToRenting", async (req, res) => {
+  try {
+    const {
+      customer_full_name,
+      room_number,
+      hotel_address,
+      employee_full_name,
+      renting_start_date,
+      renting_end_date
+    } = req.body;
+    
+    
+    const rentingQuery = `
+    INSERT INTO Renting (room_number, hotel_address, customer_ssn, employee_ssn, renting_start_date, renting_end_date)
+    SELECT 
+        $2, 
+        $3, 
+        (SELECT customer_ssn FROM Customer WHERE customer_full_name ILIKE $1), 
+        (SELECT employee_ssn FROM Employee WHERE employee_full_name ILIKE $4), 
+        $5, 
+        $6
+    RETURNING *;
+    `;
+   
+    
+    const { rows: rentingRows } = await pool.query(rentingQuery, [
+      `%${customer_full_name}%`,
+      room_number,
+      `${hotel_address}`,
+      `%${employee_full_name}%`,
+      `${renting_start_date}`,
+      `${renting_end_date}`
+    ]);
+
+
+    const deletebookingQuery = `DELETE FROM Booking 
+    WHERE customer_ssn = (SELECT customer_ssn FROM Customer WHERE customer_full_name ILIKE $1) 
+    AND room_number = $2 AND hotel_address = $3 AND booking_start_date = $4 AND booking_end_date = $5;`;
+    const { rows: bookingRows } = await pool.query(deletebookingQuery, [
+      `%${customer_full_name}%`,
+        room_number,
+      `${hotel_address}`,
+      `${renting_start_date}`,
+      `${renting_end_date}`
+    ]);
+
+    res
+      .status(201)
+      .json({
+        renting: rentingRows[0],
+        message: "Renting created successfully",
+      });
+  } catch (error) {
+    console.error("Error creating renting:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

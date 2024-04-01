@@ -35,14 +35,14 @@ function BookingToRenting() {
   
     try {
       console.log(roomNumber,hotel_address,booking_start_date,booking_end_date,formData.fullName,formData.employeeFullName);
-        const response2 = await fetch('http://localhost:3001/renting', {
+        const response2 = await fetch('http://localhost:3001/bookingToRenting', {
       method: 'POST',
      headers: {
     'Content-Type': 'application/json',
       },
     body: JSON.stringify({
-    booking_start_date: booking_start_date,
-    booking_end_date: booking_end_date,
+    renting_start_date: booking_start_date,
+    renting_end_date: booking_end_date,
     customer_full_name: formData.fullName,
     hotel_address: hotel_address,
     room_number: roomNumber,
