@@ -125,8 +125,8 @@ app.get("/bookings", async (req, res) => {
     
     // Construct the SQL query
     const query = `
-    SELECT r.*
-  FROM Renting r
+    SELECT b.*
+  FROM Booking b
   JOIN Customer c ON r.customer_ssn = c.customer_ssn
   JOIN Employee e ON r.employee_ssn = e.employee_ssn
   WHERE c.customer_full_name = $1
