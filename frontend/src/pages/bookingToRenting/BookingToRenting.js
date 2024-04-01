@@ -11,23 +11,18 @@ function BookingToRenting() {
     
   });
 
-  console.log(formData);
+ 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const response = await fetch(`http://localhost:3001/bookings?fullName=${formData.fullName}
       &employeeFullName=${formData.employeeFullName}
       `);
-      
       const data = await response.json();
       setBookings(data.bookings); 
-
-      // Clear the form data after successful submission
-      setFormData({
-        fullName: '',
-        employeeFullName: ''
-    
-      });
+      
+     
+      
     } catch (error) {
       console.error('Error fetching hotels:', error);
     }
@@ -62,7 +57,7 @@ function BookingToRenting() {
 <h1>Current Bookings</h1>
 <ul>
     {bookings.map((booking) => (
-      <li key={booking.customer_ssn}>
+      <li key={`${booking.customer_ssn}-${booking.room_number}-${booking.hotel_address}`}>
         {booking.room_number} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stars: {booking.hotel_address}
         {/* <button onClick={() => handleViewRooms(hotel.hotel_address)}>View Rooms</button> */}
       </li>
