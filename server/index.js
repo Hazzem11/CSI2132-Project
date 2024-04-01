@@ -127,8 +127,8 @@ app.get("/bookings", async (req, res) => {
     const query = `
     SELECT b.*
   FROM Booking b
-  JOIN Customer c ON r.customer_ssn = c.customer_ssn
-  JOIN Employee e ON r.employee_ssn = e.employee_ssn
+  JOIN Customer c ON b.customer_ssn = c.customer_ssn
+  JOIN Employee e ON b.employee_ssn = e.employee_ssn
   WHERE c.customer_full_name = $1
   AND e.employee_full_name = $2;
     `;
