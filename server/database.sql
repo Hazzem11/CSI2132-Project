@@ -34,9 +34,6 @@ CREATE TABLE Room (
     view VARCHAR(50),
     price DECIMAL(10, 2) CHECK (price >= 0),
     extendability BOOLEAN,
-    booking_start_date DATE,
-    booking_end_date DATE,
-    room_status VARCHAR(50),
     PRIMARY KEY (room_number, hotel_address),
     FOREIGN KEY (hotel_address) REFERENCES Hotel(hotel_address) ON DELETE CASCADE
 );
@@ -2702,3 +2699,20 @@ CREATE TRIGGER trg_archive_outdated_rentings
 AFTER DELETE ON Renting
 FOR EACH ROW
 EXECUTE FUNCTION archive_outdated_rentings();
+
+
+
+CREATE VIEW AvailableRoomsPerArea AS
+SELECT r.hotel_address AS area,
+       COUNT(*) AS available_rooms
+FROM Room r
+LEFT JOIN (
+    SELECT DISTINCT room_number, hotel_address
+    FROM Renting
+    WHERE CURRENT_DATE NOT BETWEEN renting_start_date AND renting_end_date
+) rt
+ON r.room_number = rt.room_number
+AND r.hotel_address = rt.hotel_address
+WHERE rt.room_number IS NULL
+   OR rt.hotel_address IS NULL
+GROUP BY r.hotel_address;
