@@ -16,6 +16,11 @@ function LogIn() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      const update = await fetch(`http://localhost:3001/update?`);
+
+
+
+
       const response = await fetch(`http://localhost:3001/login?fullName=${formData.fullName}`);
       const data = await response.json();
       setUser(data.users[0]);

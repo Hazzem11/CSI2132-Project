@@ -2645,3 +2645,60 @@ CREATE INDEX idx_room_number_hotel_address ON Room (room_number, hotel_address);
 CREATE INDEX idx_roomamenity_room_hotel_amenity ON RoomAmenity (room_number, hotel_address, amenity_id);
 CREATE INDEX idx_renting_room_hotel_customer_employee_startdate 
     ON Renting (room_number, hotel_address, customer_ssn, employee_ssn, renting_start_date);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Trigger
+CREATE OR REPLACE FUNCTION archive_outdated_bookings()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Archive outdated bookings
+    INSERT INTO Archive (information)
+    SELECT CAST(ROW(OLD.customer_ssn, OLD.room_number, OLD.hotel_address, OLD.booking_start_date) AS TEXT)
+    WHERE OLD.booking_end_date < CURRENT_DATE;
+
+    -- Delete outdated bookings
+    DELETE FROM Booking
+    WHERE booking_end_date < CURRENT_DATE;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_archive_outdated_bookings
+AFTER DELETE ON Booking
+FOR EACH ROW
+EXECUTE FUNCTION archive_outdated_bookings();
+
+
+CREATE OR REPLACE FUNCTION archive_outdated_rentings()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Archive outdated rentings
+    INSERT INTO Archive (information)
+    SELECT CAST(ROW(OLD.room_number, OLD.hotel_address, OLD.customer_ssn, OLD.employee_ssn, OLD.renting_start_date) AS TEXT)
+    WHERE OLD.renting_end_date < CURRENT_DATE;
+
+    -- Delete outdated rentings
+    DELETE FROM Renting
+    WHERE renting_end_date < CURRENT_DATE;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_archive_outdated_rentings
+AFTER DELETE ON Renting
+FOR EACH ROW
+EXECUTE FUNCTION archive_outdated_rentings();

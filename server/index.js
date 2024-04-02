@@ -268,31 +268,6 @@ app.post("/booking", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-app.get("/myHotel", async (req, res) => {
-  try {
-    // Extract parameters from the request
-    const { employee_full_name } = req.query;
-
-    // Construct the SQL query
-    const query = `
-      SELECT hotel_address
-      FROM employee
-      WHERE employee_full_name = $1
-    `;
-
-    const queryParams = ['employee_full_name'];
-
-    // Execute the SQL query
-    const { rows } = await pool.query(query, queryParams);
-
-    // Send the response with the fetched rooms
-    res.json({ users: rows });
-  } catch (error) {
-    // Handle errors
-    console.error("Error executing query:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
 app.post("/bookingToRenting", async (req, res) => {
   try {
     const {
@@ -411,6 +386,34 @@ app.get("/bookingRentable", async (req, res) => {
     }
     // Send the response indicating rentability status
     res.json({ rentable: !rows[0].conflict_exists});
+  } catch (error) {
+    // Handle errors
+    console.error("Error executing query:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+app.get("/update", async (req, res) => {
+  try {
+    // Extract parameters from the request
+
+    // Construct the SQL query
+    const bookingUpdateQuery = `
+    DELETE FROM Booking
+    WHERE booking_end_date < CURRENT_DATE;
+    `;
+    const rentingUpdateQuery = `
+    DELETE FROM Renting
+    WHERE renting_end_date < CURRENT_DATE;
+    `;
+
+
+
+    // Execute the SQL query
+    const { rows } = await pool.query(bookingUpdateQuery);
+    const { rows: rows2 } = await pool.query(rentingUpdateQuery);
+
+    // Send the response with the fetched rooms
+    res.json({ users: rows });
   } catch (error) {
     // Handle errors
     console.error("Error executing query:", error);
