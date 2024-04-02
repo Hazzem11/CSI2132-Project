@@ -34,8 +34,17 @@ function BookingToRenting() {
   const handleSubmitRent = async (roomNumber,hotel_address,booking_start_date,booking_end_date ) => {
   
     try {
-      console.log(roomNumber,hotel_address,booking_start_date,booking_end_date,formData.fullName,formData.employeeFullName);
-        const response2 = await fetch('http://localhost:3001/bookingToRenting', {
+      const rentingAvailability = await fetch(`http://localhost:3001/bookingRentable?customer_full_name=${formData.fullName}&booking_start_date=${booking_start_date}&booking_end_date=${booking_end_date}&hotel_address=${hotel_address}&room_number=${roomNumber}`);
+      const data = await rentingAvailability.json();
+      console.log(data);
+      
+      
+      if (data.rentable === false) {
+        alert("This room is not rentable");
+        return;
+      }
+      else{
+      const response2 = await fetch('http://localhost:3001/bookingToRenting', {
       method: 'POST',
      headers: {
     'Content-Type': 'application/json',
@@ -49,7 +58,7 @@ function BookingToRenting() {
     employee_full_name: formData.employeeFullName
      }),
     });
-      
+    }
       
     } catch (error) {
       console.error("Error renting room:", error);

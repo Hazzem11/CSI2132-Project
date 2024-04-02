@@ -28,6 +28,7 @@ function Book() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      
       const response = await fetch(`http://localhost:3001/rooms?startDate=${formData.startDate}
         &endDate=${formData.endDate}
         &roomCapacity=${formData.roomCapacity}
