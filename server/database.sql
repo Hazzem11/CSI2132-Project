@@ -538,7 +538,7 @@ VALUES(1, '001 Hezi St, Montreal, Quebec, Canada', 2, 'City View', 150.0, true),
  (2, '419 ZouZou Ave, Madrid, Spain', 4, 'Mountain View', 300.0, false),
  (3, '419 ZouZou Ave, Madrid, Spain', 3, 'Lake View', 250.0, true),
  (4, '419 ZouZou Ave, Madrid, Spain', 2, 'Ocean View', 400.0, false),
- (5, '419 ZouZou Ave, Madrid, Spain', 5, 'Garden View', 450.0, true),;
+ (5, '419 ZouZou Ave, Madrid, Spain', 5, 'Garden View', 450.0, true);
 
 INSERT INTO Amenity (amenity_id, amenity_name) VALUES 
 (0, 'Comfortable mattress'), 
