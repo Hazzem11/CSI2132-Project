@@ -420,6 +420,53 @@ app.get("/update", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+app.get("/roomsInArea", async (req, res) => {
+  try {
+    const {area } = req.query;
+    const roomsInAreaQuery = `
+    SELECT SUM(available_rooms) AS total_available_rooms 
+    FROM AvailableRoomsPerArea 
+    WHERE area ILIKE $1;
+    `;
+    const queryParams = [
+      `%${area}%`
+    ];
+
+
+
+    // Execute the SQL query
+    const { rows } = await pool.query(roomsInAreaQuery, queryParams);
+    //return the total available rooms in the area
+    res.json({ total_available_rooms: rows[0].total_available_rooms });
+  } catch (error) {
+    // Handle errors
+    console.error("Error executing query:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+app.get("/totalCapacity", async (req, res) => {
+  try {
+    const {hotel_address } = req.query;
+    const totalCapacityQuery = `
+    SELECT total_capacity FROM hotelroomcapacity WHERE hotel_address = $1;
+    `;
+    const queryParams = [
+      `${hotel_address}`
+    ];
+
+
+
+    // Execute the SQL query
+    const { rows } = await pool.query(totalCapacityQuery, queryParams);
+    //return the total available rooms in the area
+    res.json({ total_capacity: rows[0].total_capacity });
+  } catch (error) {
+    // Handle errors
+    console.error("Error executing query:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
