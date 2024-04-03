@@ -7,7 +7,7 @@ function BookingNavbar() {
   return (
     <div className='navbar'>
       <div className="logo">
-        <h2>Find your next stay</h2>
+        <h2>Find your next stay at</h2>
       </div>
       <ul className="nav-menu">
       <li><Link to="/home"><button className="nav-button">Home</button></Link></li>

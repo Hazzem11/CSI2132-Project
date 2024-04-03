@@ -82,7 +82,7 @@
     padding: 1rem; /* Add padding for spacing */
     box-sizing: border-box; /* Include padding in the width calculation */
     z-index: 1;
-    height: 50%;
+    height: 100%;
     flex: 50%;
     justify-content: center;
     align-items: center;
@@ -101,6 +101,8 @@
 .hotel-view ul {
     list-style-type: none;
     padding: 0;
+    overflow-y: auto;
+    /* height: 100%; */
 }
 
 .hotel-view li {

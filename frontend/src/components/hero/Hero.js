@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import './HeroStyles.css';
 import Video from '../../assets/cool-hotel.mp4';
-import { useParams } from "react-router-dom";
+import RoomAvailability from './RoomAvailability';
 
 function Hero() {
   // State variables to store form input values
@@ -63,6 +63,8 @@ function Hero() {
           <div>
             <label htmlFor="area">Location:</label>
             <input type="text" id="area" name="area" value={formData.area} onChange={handleInputChange} />
+            <div><RoomAvailability/></div>
+            <div>this area</div> 
           </div>
           <div>
             <label htmlFor="hotelChain">Hotel Chain:</label>
@@ -99,6 +101,7 @@ function Hero() {
     {hotels.map((hotel) => (
       <li key={hotel.hotel_address}>
         {hotel.hotel_address} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stars: {hotel.star_rating}
+        <div>4 available rooms</div>
         <button onClick={() => handleViewRooms(hotel.hotel_address)}>View Rooms</button>
       </li>
     ))}
