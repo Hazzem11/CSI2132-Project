@@ -18,8 +18,7 @@ function Book() {
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const { employee_full_name,hotel_address } = useParams();
-  console.log(employee_full_name);
-  console.log(hotel_address);
+  
   if (employee_full_name === 'undefined') {
     purpose = "Book Room";
   } else {
@@ -36,7 +35,7 @@ function Book() {
         &roomPrice=${formData.roomPrice}`);
 
       const data = await response.json();
-      console.log(data);
+      
       setRooms(data.rooms);
       
     } catch (error) {
@@ -62,8 +61,7 @@ function Book() {
     });
       }
       else{
-        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
-        console.log(fullName)
+       
         
 
         const response2 = await fetch('http://localhost:3001/renting', {

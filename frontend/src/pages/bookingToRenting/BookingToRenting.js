@@ -17,7 +17,7 @@ function BookingToRenting() {
     try {
       const response = await fetch(`http://localhost:3001/bookings?customer_full_name=${formData.fullName}`);
       const data = await response.json();
-      console.log(data);
+      
       setBookings(data.bookings); 
       
      
@@ -36,7 +36,7 @@ function BookingToRenting() {
     try {
       const rentingAvailability = await fetch(`http://localhost:3001/bookingRentable?customer_full_name=${formData.fullName}&booking_start_date=${booking_start_date}&booking_end_date=${booking_end_date}&hotel_address=${hotel_address}&room_number=${roomNumber}`);
       const data = await rentingAvailability.json();
-      console.log(data);
+     
       
       
       if (data.rentable === false) {

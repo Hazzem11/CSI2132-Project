@@ -13,7 +13,7 @@ function Hero() {
     hotelCategory: '',
     totalRooms: '',
   });
-  const [areaAvailability, setAreaAvailability] = useState(0);
+  const [areaAvailability, setAreaAvailability] = useState();
   const navigate = useNavigate();
 
   async function getTotalCapacity(address) {

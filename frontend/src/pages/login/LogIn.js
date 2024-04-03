@@ -24,13 +24,12 @@ function LogIn() {
       const response = await fetch(`http://localhost:3001/login?fullName=${formData.fullName}`);
       const data = await response.json();
       setUser(data.users[0]);
-      console.log("Current User")
-      console.log(data.users[0].user_type)
+    
     
 
       // Redirect based on user_type
       if (data.users[0].user_type === "Employee") {
-        console.log(data.users[0].user_full_name);
+        
         navigate(`/booking/${data.users[0].user_full_name}/${data.users[0].hotel_address}`); 
         
       } else if (data.users[0].user_type === 'Customer') {
