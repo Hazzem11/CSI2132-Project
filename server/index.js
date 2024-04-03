@@ -459,6 +459,7 @@ app.get("/totalCapacity", async (req, res) => {
     // Execute the SQL query
     const { rows } = await pool.query(totalCapacityQuery, queryParams);
     //return the total available rooms in the area
+    
     res.json({ total_capacity: rows[0].total_capacity });
   } catch (error) {
     // Handle errors

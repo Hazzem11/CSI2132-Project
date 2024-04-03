@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import './HeroStyles.css';
 import Video from '../../assets/cool-hotel.mp4';
-import RoomAvailability from './RoomAvailability';
 
 function Hero() {
   // State variables to store form input values
@@ -14,29 +13,46 @@ function Hero() {
     hotelCategory: '',
     totalRooms: '',
   });
-
+  const [areaAvailability, setAreaAvailability] = useState(0);
   const navigate = useNavigate();
 
-  const getTotalCapacity = async (address) => {
+  async function getTotalCapacity(address) {
     try {
       const response = await fetch(`http://localhost:3001/totalCapacity?hotel_address=${address}`);
       const data = await response.json();
-      console.log(data)
+      
+      return data.total_capacity; // If you want to return the data to the caller
     } catch (error) {
       console.error('Error fetching hotels:', error);
+      throw error; // Re-throwing the error if needed
     }
-  };
+  }
+  async function getAreaAvailability(area) {
+    try {
+      const response = await fetch(`http://localhost:3001/roomsInArea?area=${area}`);
+      const data = await response.json();
+      setAreaAvailability(data.total_available_rooms);
+    } catch (error) {
+      console.error('Error fetching hotels:', error);
+      throw error; // Re-throwing the error if needed
+    }
+  }
   
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const response = await fetch(`http://localhost:3001/hotels?area=${formData.area}&hotelChain=${formData.hotelChain}&hotelCategory=${formData.hotelCategory}&totalRooms=${formData.totalRooms}`);
-      
+      const num = getAreaAvailability(formData.area);
       const data = await response.json();
-      console.log(data)
-      setHotels(data.hotels); 
+      for (let i = 0; i < data.hotels.length; i++) {
+       data.hotels[i].totalCapacity = await getTotalCapacity(data.hotels[i].hotel_address);
+      
+      }
 
+      setHotels(data.hotels); 
+     
+     
       // Clear the form data after successful submission
       setFormData({
         area: '',
@@ -52,7 +68,11 @@ function Hero() {
   const handleInputChange = (event) => {
     
     const { name, value } = event.target;
+    
     setFormData({ ...formData, [name]: value });
+    if (name === 'area') {
+      getAreaAvailability(value);
+    }
   };
 
  
@@ -72,8 +92,7 @@ function Hero() {
           <div>
             <label htmlFor="area">Location:</label>
             <input type="text" id="area" name="area" value={formData.area} onChange={handleInputChange} />
-            <div><RoomAvailability/></div>
-            <div>this area</div> 
+            <div>{areaAvailability} available rooms in this area</div>
           </div>
           <div>
             <label htmlFor="hotelChain">Hotel Chain:</label>
@@ -110,7 +129,7 @@ function Hero() {
     {hotels.map((hotel) => (
       <li key={hotel.hotel_address}>
         {hotel.hotel_address} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stars: {hotel.star_rating}
-        <div>Total Capacity of {getTotalCapacity(hotel.hotel_address)} people</div>
+        <div>Total Capacity of {hotel.totalCapacity} people</div>
         <button onClick={() => handleViewRooms(hotel.hotel_address)}>View Rooms</button>
       </li>
     ))}
