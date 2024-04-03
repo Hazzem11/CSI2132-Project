@@ -17,6 +17,15 @@ function Hero() {
 
   const navigate = useNavigate();
 
+  const getTotalCapacity = async (address) => {
+    try {
+      const response = await fetch(`http://localhost:3001/totalCapacity?hotel_address=${address}`);
+      const data = await response.json();
+      console.log(data)
+    } catch (error) {
+      console.error('Error fetching hotels:', error);
+    }
+  };
   
 
   const handleSubmit = async (event) => {
@@ -101,7 +110,7 @@ function Hero() {
     {hotels.map((hotel) => (
       <li key={hotel.hotel_address}>
         {hotel.hotel_address} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stars: {hotel.star_rating}
-        <div>4 available rooms</div>
+        <div>Total Capacity of {getTotalCapacity(hotel.hotel_address)} people</div>
         <button onClick={() => handleViewRooms(hotel.hotel_address)}>View Rooms</button>
       </li>
     ))}
