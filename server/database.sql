@@ -2716,3 +2716,9 @@ AND r.hotel_address = rt.hotel_address
 WHERE rt.room_number IS NULL
    OR rt.hotel_address IS NULL
 GROUP BY r.hotel_address;
+
+
+CREATE VIEW HotelRoomCapacity AS
+SELECT hotel_address, SUM(capacity) AS total_capacity
+FROM Room
+GROUP BY hotel_address;
